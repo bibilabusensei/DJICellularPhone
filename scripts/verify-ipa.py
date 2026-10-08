@@ -46,6 +46,11 @@ def validate_ipa(ipa_path, commit):
         require(set(info.get("UIDeviceFamily", [])) == {1, 2}, "IPA must support both iPhone and iPad")
         require("iPhoneOS" in info.get("CFBundleSupportedPlatforms", []), "Not a device build")
         require(info.get("MinimumOSVersion") == "17.0", "Unexpected minimum OS")
+        ipad_orientations = info.get("UISupportedInterfaceOrientations~ipad", info.get("UISupportedInterfaceOrientations", []))
+        require(set(ipad_orientations) == {
+            "UIInterfaceOrientationPortrait", "UIInterfaceOrientationPortraitUpsideDown",
+            "UIInterfaceOrientationLandscapeLeft", "UIInterfaceOrientationLandscapeRight",
+        }, "iPad multitasking requires all four orientations")
         executable = archive.read(bundle_path + info["CFBundleExecutable"])
         require(len(executable) >= 32 and executable[:4] == b"\xcf\xfa\xed\xfe", "Missing 64-bit Mach-O executable")
         require(struct.unpack_from("<I", executable, 4)[0] == 0x0100000C, "Device executable must be arm64")
@@ -60,6 +65,7 @@ def validate_ipa(ipa_path, commit):
         "build": info["CFBundleVersion"],
         "minimumOS": info["MinimumOSVersion"],
         "deviceFamilies": info["UIDeviceFamily"],
+        "ipadOrientations": ipad_orientations,
         "architecture": "arm64",
         "codeSigningAllowed": False,
         "provisioningProfileIncluded": False,
