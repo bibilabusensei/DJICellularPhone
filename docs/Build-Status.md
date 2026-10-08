@@ -39,6 +39,19 @@
 - [构建日志 artifact](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/37781446662/artifacts/11552052950)：包含 device 与 simulator 两份日志。
 - 实际清单确认：无嵌入 provisioning profile，随包 USB 快照非实时；真实 USB transport、蜂窝电话、模块 Internet 三项全部 `false`。没有进行真机安装/业务或模拟器运行测试。
 
-此结果对应上述代码提交；仅追加本节的文档提交不改变已验证代码。后续代码变更应重新构建，不能沿用此结果声称通过。
+此结果仅对应上述代码提交。后续代码变更应重新构建，不能沿用此结果声称通过。
 
 复核日志发现 build 2 的 iPad 全方向支持警告（不是编译失败）；现补充 iPhone/iPad 独立旋转配置，并在包校验中要求 iPad 四个方向，将 build 号递增至 3。AppIntents 未使用导致的 metadata skipped 提示不影响编译，不为消除提示引入无关框架。build 3 结果以新提交实际 Actions 为准。
+
+## 最终 build 3：成功，iPad 旋转警告已修复
+
+- 代码提交：`5e6e547079fc461dd1bc40192eeedeadde7b9ee0`。
+- [Actions run 37781981672](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/37781981672)：`completed / success`，job `113327082966`。
+- 设备与模拟器编译、脱敏快照校验、IPA 校验与上传全部通过；日志中已无 iPad 旋转配置警告，只剩未使用 AppIntents 的 metadata skipped 提示。
+- 版本 `0.2.0`，build `3`；包内 iPad 四向旋转配置与设备家族 `[1,2]` 验证通过。
+- [最终 IPA artifact](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/37781981672/artifacts/11552117785)：ID `11552117785`，外层 ZIP 79901 字节，保存至 2026-11-07 21:09:19（香港）。
+- IPA SHA-256：`b41f8516f16e858cc2f7ffbe340e1933cbb3895764bab1f0029c3abd47a951c6`。
+- [最终构建日志](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/37781981672/artifacts/11551913991)。
+- 实际能力仍是只读研究工具；未进行真机安装、USB 数据传输、电话、联网或模拟器 UI 运行测试。
+
+追加此最终结果的提交仅修改本文件，使用 `[skip ci]` 避免为文档重复构建。可安装能力与编译证据都必须引用上面的代码提交和对应 artifact，而不是把文档提交当作新 App 构建。
