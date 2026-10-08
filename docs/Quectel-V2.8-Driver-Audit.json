@@ -1,0 +1,574 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUTC": "2026-10-08T14:07:23.2328481Z",
+  "target": "USB\\VID_2CA3&PID_4009",
+  "infCount": 14,
+  "targetCandidateInfCount": 0,
+  "packages": [
+    {
+      "relativePath": "windows10/qcfilter.inf",
+      "sha256": "455cabcf82e80162f1b3f7910a499fc2810e8472c55d7859fcbcd53fd4b896d9",
+      "class": "USB",
+      "driverVersion": "01/07/2025,15.26.53.950",
+      "modelSections": [
+        "QuectelFilter.NTamd64",
+        "QuectelFilter.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "QuectelFilter.NTamd64",
+          "line": 124,
+          "installSection": "qcfilter",
+          "identifier": "USB\\VID_2CA3&PID_4006",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "CatalogFile",
+          "name": "qcfilter.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows10/qcmdm.inf",
+      "sha256": "44201e52a538b1ee7067f1e9e55364c413158d897b10dca12c461a18fc193a95",
+      "class": "Modem",
+      "driverVersion": "01/07/2025,20.0.65.18",
+      "modelSections": [
+        "Models.NTamd64",
+        "Models.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "Models.NTx86",
+          "line": 46,
+          "installSection": "Modem2",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_03",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "Models.NTamd64",
+          "line": 106,
+          "installSection": "Modem2",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_03",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcmdm.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows10/qcser.inf",
+      "sha256": "08f4300656afbecab57b09eb55fa5c336f2bdcad1b579c38de81b4256bd1736a",
+      "class": "Ports",
+      "driverVersion": "01/07/2025,30.0.72.25",
+      "modelSections": [
+        "QcomSerialPort.NTamd64",
+        "QcomSerialPort.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 52,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_00",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 53,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_01",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 54,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_02",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 236,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_00",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 237,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_01",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 238,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_02",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcser.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows10/qcwwan.inf",
+      "sha256": "ae4bb7c4f71ce8ac36b205b0d1198565d981f8f43549ef4286e1073e8daa3988",
+      "class": "Net",
+      "driverVersion": "01/10/2025,20.0.72.21",
+      "modelSections": [
+        "QCOM.NTamd64.6.1",
+        "QCOM.NTx86.6.1"
+      ],
+      "usbModels": [
+        {
+          "section": "QCOM.NTx86.6.1",
+          "line": 39,
+          "installSection": "qcwwan.ndi",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_04",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QCOM.NTamd64.6.1",
+          "line": 125,
+          "installSection": "qcwwan.ndi",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_04",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcwwan.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows10/qdbusb.inf",
+      "sha256": "02e5db07a63b25bb414b832552432cb13448bce970adc0e4e0ca319dfc2e3a99",
+      "class": "USBDevice",
+      "driverVersion": "01/07/2025,1.0.2.18",
+      "modelSections": [
+        "QCOM.NTamd64",
+        "QCOM.NTx86"
+      ],
+      "usbModels": [],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qdbusb.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows7/qcfilter.inf",
+      "sha256": "455cabcf82e80162f1b3f7910a499fc2810e8472c55d7859fcbcd53fd4b896d9",
+      "class": "USB",
+      "driverVersion": "01/07/2025,15.26.53.950",
+      "modelSections": [
+        "QuectelFilter.NTamd64",
+        "QuectelFilter.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "QuectelFilter.NTamd64",
+          "line": 124,
+          "installSection": "qcfilter",
+          "identifier": "USB\\VID_2CA3&PID_4006",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "CatalogFile",
+          "name": "qcfilter.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=\"Quectel Wireless Solutions Co.,Ltd.\", OU=R&D Dept., O=\"Quectel Wireless Solutions Co.,Ltd.\", STREET=松江区泗泾镇高技路205弄6号5层513室, L=Shanghai, S=Shanghai, C=CN, OID.1.3.6.1.4.1.311.60.2.1.2=SHANGHAI, OID.1.3.6.1.4.1.311.60.2.1.3=CN, SERIALNUMBER=913100005631196115, OID.2.5.4.15=Private Organization",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows7/qcmdm.inf",
+      "sha256": "44201e52a538b1ee7067f1e9e55364c413158d897b10dca12c461a18fc193a95",
+      "class": "Modem",
+      "driverVersion": "01/07/2025,20.0.65.18",
+      "modelSections": [
+        "Models.NTamd64",
+        "Models.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "Models.NTx86",
+          "line": 46,
+          "installSection": "Modem2",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_03",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "Models.NTamd64",
+          "line": 106,
+          "installSection": "Modem2",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_03",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcmdm.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=\"Quectel Wireless Solutions Co.,Ltd.\", OU=R&D Dept., O=\"Quectel Wireless Solutions Co.,Ltd.\", STREET=松江区泗泾镇高技路205弄6号5层513室, L=Shanghai, S=Shanghai, C=CN, OID.1.3.6.1.4.1.311.60.2.1.2=SHANGHAI, OID.1.3.6.1.4.1.311.60.2.1.3=CN, SERIALNUMBER=913100005631196115, OID.2.5.4.15=Private Organization",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows7/qcser.inf",
+      "sha256": "08f4300656afbecab57b09eb55fa5c336f2bdcad1b579c38de81b4256bd1736a",
+      "class": "Ports",
+      "driverVersion": "01/07/2025,30.0.72.25",
+      "modelSections": [
+        "QcomSerialPort.NTamd64",
+        "QcomSerialPort.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 52,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_00",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 53,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_01",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 54,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_02",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 236,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_00",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 237,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_01",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 238,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_02",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcser.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=\"Quectel Wireless Solutions Co.,Ltd.\", OU=R&D Dept., O=\"Quectel Wireless Solutions Co.,Ltd.\", STREET=松江区泗泾镇高技路205弄6号5层513室, L=Shanghai, S=Shanghai, C=CN, OID.1.3.6.1.4.1.311.60.2.1.2=SHANGHAI, OID.1.3.6.1.4.1.311.60.2.1.3=CN, SERIALNUMBER=913100005631196115, OID.2.5.4.15=Private Organization",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows7/qcwwan.inf",
+      "sha256": "ae4bb7c4f71ce8ac36b205b0d1198565d981f8f43549ef4286e1073e8daa3988",
+      "class": "Net",
+      "driverVersion": "01/10/2025,20.0.72.21",
+      "modelSections": [
+        "QCOM.NTamd64.6.1",
+        "QCOM.NTx86.6.1"
+      ],
+      "usbModels": [
+        {
+          "section": "QCOM.NTx86.6.1",
+          "line": 39,
+          "installSection": "qcwwan.ndi",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_04",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QCOM.NTamd64.6.1",
+          "line": 125,
+          "installSection": "qcwwan.ndi",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_04",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcwwan.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=\"Quectel Wireless Solutions Co.,Ltd.\", OU=R&D Dept., O=\"Quectel Wireless Solutions Co.,Ltd.\", STREET=松江区泗泾镇高技路205弄6号5层513室, L=Shanghai, S=Shanghai, C=CN, OID.1.3.6.1.4.1.311.60.2.1.2=SHANGHAI, OID.1.3.6.1.4.1.311.60.2.1.3=CN, SERIALNUMBER=913100005631196115, OID.2.5.4.15=Private Organization",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "windows7/qdbusb.inf",
+      "sha256": "dadcf561258a5c19ac1e96c663a4b96df280382637a55479cb33c6029c537cea",
+      "class": "USBDevice",
+      "driverVersion": "01/07/2025,1.0.2.18",
+      "modelSections": [
+        "QCOM.NTamd64",
+        "QCOM.NTx86"
+      ],
+      "usbModels": [],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qdbusb.cat",
+          "present": true,
+          "authenticodeStatus": "Valid",
+          "signer": "CN=\"Quectel Wireless Solutions Co.,Ltd.\", OU=R&D Dept., O=\"Quectel Wireless Solutions Co.,Ltd.\", STREET=松江区泗泾镇高技路205弄6号5层513室, L=Shanghai, S=Shanghai, C=CN, OID.1.3.6.1.4.1.311.60.2.1.2=SHANGHAI, OID.1.3.6.1.4.1.311.60.2.1.3=CN, SERIALNUMBER=913100005631196115, OID.2.5.4.15=Private Organization",
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "xp-vista/qcfilter.inf",
+      "sha256": "42ee5c0ee547068a9e749afbd56b70feb46c42dbbf306e31ea31bab3f3e9f866",
+      "class": "USB",
+      "driverVersion": "03/30/2020,15.26.53.933",
+      "modelSections": [
+        "QuectelFilter.NTamd64",
+        "QuectelFilter.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "QuectelFilter.NTx86",
+          "line": 46,
+          "installSection": "qcfilter",
+          "identifier": "USB\\VID_2CA3&PID_4006",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QuectelFilter.NTamd64",
+          "line": 77,
+          "installSection": "qcfilter",
+          "identifier": "USB\\VID_2CA3&PID_4006",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "CatalogFile",
+          "name": "qcfilter.cat",
+          "present": false,
+          "authenticodeStatus": "Missing",
+          "signer": null,
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "xp-vista/qcmdm.inf",
+      "sha256": "96f7d6588c66bce2c14ddb980a8ceec66d8f3b7a492332448381ea12601ff787",
+      "class": "Modem",
+      "driverVersion": "03/30/2021,20.0.65.1",
+      "modelSections": [
+        "Models.NTamd64",
+        "Models.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "Models.NTx86",
+          "line": 46,
+          "installSection": "Modem2",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_03",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "Models.NTamd64",
+          "line": 75,
+          "installSection": "Modem2",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_03",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcmdm.cat",
+          "present": false,
+          "authenticodeStatus": "Missing",
+          "signer": null,
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "xp-vista/qcser.inf",
+      "sha256": "5fcbdf9564eba9d2c21aa3a33fc826d02bd4801befc829aaf727dd40b5258c9e",
+      "class": "Ports",
+      "driverVersion": "03/30/2021,30.0.65.1",
+      "modelSections": [
+        "QcomSerialPort.NTamd64",
+        "QcomSerialPort.NTx86"
+      ],
+      "usbModels": [
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 52,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_00",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 53,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_01",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTx86",
+          "line": 54,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_02",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 127,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_00",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 128,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_01",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QcomSerialPort.NTamd64",
+          "line": 129,
+          "installSection": "QportInstall00",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_02",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcser.cat",
+          "present": false,
+          "authenticodeStatus": "Missing",
+          "signer": null,
+          "catalogMembershipVerified": false
+        }
+      ]
+    },
+    {
+      "relativePath": "xp-vista/qcwwan.inf",
+      "sha256": "750901ad4c63a1145854ff16b63f59d394c38df5bb3b4f96a72aa479e1a4abc2",
+      "class": "Net",
+      "driverVersion": "03/30/2021,17.32.12.666",
+      "modelSections": [
+        "QCOM.NTamd64.6.1",
+        "QCOM.NTx86.6.1"
+      ],
+      "usbModels": [
+        {
+          "section": "QCOM.NTx86.6.1",
+          "line": 39,
+          "installSection": "qcwwan.ndi",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_04",
+          "targetIdCandidate": false
+        },
+        {
+          "section": "QCOM.NTamd64.6.1",
+          "line": 79,
+          "installSection": "qcwwan.ndi",
+          "identifier": "USB\\VID_2CA3&PID_4006&MI_04",
+          "targetIdCandidate": false
+        }
+      ],
+      "targetIdCandidates": [],
+      "catalogs": [
+        {
+          "directive": "Catalogfile",
+          "name": "qcwwan.cat",
+          "present": false,
+          "authenticodeStatus": "Missing",
+          "signer": null,
+          "catalogMembershipVerified": false
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Read-only file audit; no installer, driver binding, device communication, registry change or network connection.",
+    "Only vendor 2CA3 active USB identifiers in model sections explicitly declared by Manufacturer are reported. This is not a complete Windows INF evaluator.",
+    "A matching identifier is only a candidate; OS decorations, installation sections, protocol compatibility and catalog membership still require verification.",
+    "Authenticode status alone does not establish that an INF or SYS belongs to the catalog; use SignTool separately.",
+    "No package root, device serial, instance suffix, SIM identifier or user account path is included."
+  ]
+}

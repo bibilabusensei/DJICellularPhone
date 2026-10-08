@@ -4,6 +4,8 @@
 
 **v0.2.0 是只读研究界面，不是真实电话或上网工具。** 没有实现实时 USB 通信、SIM 查询、蜂窝数据、IMS/VoLTE、音频或 CallKit 通话。号码仅保留在当前界面内，不发送、不拨打，也不会调用本机 SIM 电话。
 
+**当前优先级：先解决 Windows PC 模块上网验证，暂不开发 iPhone/iPad 驱动与电话业务。** 已从官方地址取得 Quectel 2.8 包并静态验签，但 14 个 INF 仍无 `4009` 匹配，当前无目标网卡；尚未进行绑定实验或联网。详见 [Windows 上网验证](docs/Windows-PC-Internet.md)。
+
 ## 已完成
 
 - iPhone 使用标签页，iPad 使用自适应侧栏；中文状态、USB 证据、电话能力和可行性说明。
@@ -66,6 +68,16 @@ xcodebuild -project DJICellularPhone.xcodeproj -scheme DJICellularPhone \
 第一个只审阅 INF/CAT 文件，不运行安装器；ID 命中和 CAT 的 Authenticode 状态不等于完整兼容性或目录成员验证。第二个仅通过现有 hub 驱动读取指定 `2CA3:4009` 的标准设备/配置描述符，不安装驱动、不打开 COM、不读写业务端点。hub 访问可能需要经用户许可在沙箱外/提升权限运行；访问被拒绝时脚本停止，不改系统权限。原始拓扑/二进制只写私有目录，公开快照不含实例后缀或字符串。
 
 [WinUSB 绑定草案](drivers/windows/README.md) 没有 CAT/签名，未安装；不要直接用它强绑设备，也不要修改 Baiwang INF、导入信任证书或关闭系统安全机制。
+
+Windows 网卡就绪检查（不安装驱动、不发送流量；需要允许访问 Windows 设备/网络元数据）：
+
+```powershell
+.\scripts\Get-IG831TNetworkReadiness.ps1 `
+  -OutputDirectory .\diagnostics-private `
+  -SnapshotPath .\docs\Windows-Network-Readiness.json
+```
+
+它只匹配目标 USB 身份，不使用其他网卡作替代；有链路/IP 也不会标记 Internet 成功。地址和接口 GUID 仅留在私有目录。
 
 ## 关键边界
 
