@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "capturedAt": "2026-10-08T12:52:22.7776962+00:00",
+  "source": "Windows PnPUtil read-only enumeration",
+  "vendorId": "2CA3",
+  "productId": "4009",
+  "bcdDevice": "0318",
+  "identityAssessment": "User-reported IG831T candidate; Windows bus description is not a chip identification.",
+  "device": {
+    "number": "parent",
+    "instanceId": "USB\\VID_2CA3&PID_4009\\<redacted>",
+    "description": "USB Composite Device",
+    "busReportedDescription": "Baiwang",
+    "hardwareIds": [
+      "USB\\VID_2CA3&PID_4009&REV_0318",
+      "USB\\VID_2CA3&PID_4009"
+    ],
+    "compatibleIds": [
+      "USB\\COMPAT_VID_2CA3&DevClass_00&SubClass_00&Prot00",
+      "USB\\COMPAT_VID_2CA3&DevClass_00&SubClass_00",
+      "USB\\COMPAT_VID_2CA3&DevClass_00",
+      "USB\\DevClass_00&SubClass_00&Prot_00",
+      "USB\\DevClass_00&SubClass_00",
+      "USB\\DevClass_00",
+      "USB\\COMPOSITE"
+    ],
+    "classCode": null,
+    "subclassCode": null,
+    "protocolCode": null,
+    "status": "Started",
+    "problemCode": 0,
+    "problemStatus": null,
+    "driverService": "usbccgp",
+    "driverInf": "usb.inf"
+  },
+  "interfaces": [
+    {
+      "number": "00",
+      "instanceId": "USB\\VID_2CA3&PID_4009&MI_00\\<redacted>",
+      "description": "Baiwang",
+      "busReportedDescription": "Baiwang",
+      "hardwareIds": [
+        "USB\\VID_2CA3&PID_4009&REV_0318&MI_00",
+        "USB\\VID_2CA3&PID_4009&MI_00"
+      ],
+      "compatibleIds": [
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_ff&Prot_ff",
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_ff",
+        "USB\\COMPAT_VID_2ca3&Class_ff",
+        "USB\\Class_ff&SubClass_ff&Prot_ff",
+        "USB\\Class_ff&SubClass_ff",
+        "USB\\Class_ff"
+      ],
+      "classCode": "FF",
+      "subclassCode": "FF",
+      "protocolCode": "FF",
+      "status": "Problem",
+      "problemCode": 28,
+      "problemStatus": "0xC0000490",
+      "driverService": null,
+      "driverInf": null
+    },
+    {
+      "number": "01",
+      "instanceId": "USB\\VID_2CA3&PID_4009&MI_01\\<redacted>",
+      "description": "Baiwang",
+      "busReportedDescription": "Baiwang",
+      "hardwareIds": [
+        "USB\\VID_2CA3&PID_4009&REV_0318&MI_01",
+        "USB\\VID_2CA3&PID_4009&MI_01"
+      ],
+      "compatibleIds": [
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_00&Prot_00",
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_00",
+        "USB\\COMPAT_VID_2ca3&Class_ff",
+        "USB\\Class_ff&SubClass_00&Prot_00",
+        "USB\\Class_ff&SubClass_00",
+        "USB\\Class_ff"
+      ],
+      "classCode": "FF",
+      "subclassCode": "00",
+      "protocolCode": "00",
+      "status": "Problem",
+      "problemCode": 28,
+      "problemStatus": "0xC0000490",
+      "driverService": null,
+      "driverInf": null
+    },
+    {
+      "number": "02",
+      "instanceId": "USB\\VID_2CA3&PID_4009&MI_02\\<redacted>",
+      "description": "Baiwang",
+      "busReportedDescription": "Baiwang",
+      "hardwareIds": [
+        "USB\\VID_2CA3&PID_4009&REV_0318&MI_02",
+        "USB\\VID_2CA3&PID_4009&MI_02"
+      ],
+      "compatibleIds": [
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_00&Prot_00",
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_00",
+        "USB\\COMPAT_VID_2ca3&Class_ff",
+        "USB\\Class_ff&SubClass_00&Prot_00",
+        "USB\\Class_ff&SubClass_00",
+        "USB\\Class_ff"
+      ],
+      "classCode": "FF",
+      "subclassCode": "00",
+      "protocolCode": "00",
+      "status": "Problem",
+      "problemCode": 28,
+      "problemStatus": "0xC0000490",
+      "driverService": null,
+      "driverInf": null
+    },
+    {
+      "number": "03",
+      "instanceId": "USB\\VID_2CA3&PID_4009&MI_03\\<redacted>",
+      "description": "Baiwang",
+      "busReportedDescription": "Baiwang",
+      "hardwareIds": [
+        "USB\\VID_2CA3&PID_4009&REV_0318&MI_03",
+        "USB\\VID_2CA3&PID_4009&MI_03"
+      ],
+      "compatibleIds": [
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_00&Prot_00",
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_00",
+        "USB\\COMPAT_VID_2ca3&Class_ff",
+        "USB\\Class_ff&SubClass_00&Prot_00",
+        "USB\\Class_ff&SubClass_00",
+        "USB\\Class_ff"
+      ],
+      "classCode": "FF",
+      "subclassCode": "00",
+      "protocolCode": "00",
+      "status": "Problem",
+      "problemCode": 28,
+      "problemStatus": "0xC0000490",
+      "driverService": null,
+      "driverInf": null
+    },
+    {
+      "number": "04",
+      "instanceId": "USB\\VID_2CA3&PID_4009&MI_04\\<redacted>",
+      "description": "Baiwang",
+      "busReportedDescription": "Baiwang",
+      "hardwareIds": [
+        "USB\\VID_2CA3&PID_4009&REV_0318&MI_04",
+        "USB\\VID_2CA3&PID_4009&MI_04"
+      ],
+      "compatibleIds": [
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_ff&Prot_ff",
+        "USB\\COMPAT_VID_2ca3&Class_ff&SubClass_ff",
+        "USB\\COMPAT_VID_2ca3&Class_ff",
+        "USB\\Class_ff&SubClass_ff&Prot_ff",
+        "USB\\Class_ff&SubClass_ff",
+        "USB\\Class_ff"
+      ],
+      "classCode": "FF",
+      "subclassCode": "FF",
+      "protocolCode": "FF",
+      "status": "Problem",
+      "problemCode": 28,
+      "problemStatus": "0xC0000490",
+      "driverService": null,
+      "driverInf": null
+    }
+  ],
+  "serialPortNames": [],
+  "serialPortAssessment": "No COM names from .NET and no matching connected Ports/Modem nodes; no accessible target serial port identified.",
+  "limitations": [
+    "Get-PnpDevice unavailable: Exception calling \"ProcessRecord\" with \"1\" argument(s): \"无法从客户端中访问 CIM 资源。\"",
+    "Win32_PnPEntity unavailable: 无法从客户端中访问 CIM 资源。",
+    "Win32_SerialPort unavailable: 无法从客户端中访问 CIM 资源。",
+    "PnP compatible IDs are not complete USB descriptors; endpoints, alternate settings and functional descriptors were not read.",
+    "No unplug/replug baseline was taken; the target is associated with the user-reported IG831T, not a verified chip identity.",
+    "Vendor-specific class does not prove AT, QMI, MBIM, RNDIS, voice or data support. No device handles or serial ports were opened."
+  ]
+}

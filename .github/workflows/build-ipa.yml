@@ -1,25 +1,82 @@
 name: Build unsigned IPA
 on:
   push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: unsigned-ipa-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: macos-15
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Record toolchain
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks
+          python3 --version
       - name: Install XcodeGen
         run: brew install xcodegen
+      - name: Validate sanitized hardware snapshot
+        run: python3 scripts/verify-ipa.py --snapshot Resources/IG831T-USB-Snapshot.json
       - name: Generate project
         run: xcodegen generate
-      - name: Build
+      - name: Build universal iPhone and iPad device app
         run: |
-          xcodebuild -project DJICellularPhone.xcodeproj -scheme DJICellularPhone -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO build
-      - name: Package unsigned IPA
+          set -euo pipefail
+          mkdir -p dist
+          xcodebuild -project DJICellularPhone.xcodeproj -scheme DJICellularPhone \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -derivedDataPath build/device CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+            build 2>&1 | tee dist/device-build.log
+      - name: Build iOS Simulator app
         run: |
-          mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/DJICellularPhone.app Payload/
-          zip -qr DJICellularPhone-unsigned.ipa Payload
-      - uses: actions/upload-artifact@v4
+          set -euo pipefail
+          xcodebuild -project DJICellularPhone.xcodeproj -scheme DJICellularPhone \
+            -configuration Debug -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/simulator CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee dist/simulator-build.log
+      - name: Package and verify unsigned IPA
+        run: |
+          set -euo pipefail
+          app='build/device/Build/Products/Release-iphoneos/DJICellularPhone.app'
+          test -d "$app"
+          mkdir -p dist/staging/Payload
+          cp -R "$app" dist/staging/Payload/
+          (cd dist/staging && zip -qr ../DJICellularPhone-unsigned.ipa Payload)
+          python3 scripts/verify-ipa.py dist/DJICellularPhone-unsigned.ipa \
+            --commit "$GITHUB_SHA" --manifest dist/build-manifest.json
+          (cd dist && shasum -a 256 DJICellularPhone-unsigned.ipa > SHA256SUMS.txt)
+          {
+            echo '### Unsigned research build'
+            echo "Commit: $GITHUB_SHA"
+            echo 'Device arm64 and iOS Simulator builds completed. IPA includes iPhone/iPad device families and sanitized historical evidence.'
+            echo 'Requires separate signing/provisioning. No real USB transport, cellular call, cellular Internet, or DriverKit entitlement is provided.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
         with:
           name: DJICellularPhone-unsigned-ipa
-          path: DJICellularPhone-unsigned.ipa
+          path: |
+            dist/DJICellularPhone-unsigned.ipa
+            dist/build-manifest.json
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: DJICellularPhone-build-logs
+          path: dist/*-build.log
+          if-no-files-found: ignore
+          retention-days: 14
