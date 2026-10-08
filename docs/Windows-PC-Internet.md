@@ -2,7 +2,55 @@
 
 更新：2026-10-08（香港）。用户明确调整优先级：**先验证这台 Windows PC 能否通过现有 IG831T 上网；iPhone、iPad 驱动与电话功能暂不推进。** 不把研究 UI、驱动入库或其他网卡访问成功当成模块上网。
 
-## 当前结果：尚未联网，卡在功能驱动绑定
+## 最新结果：网卡/控制串口已启动，注册与附着仍失败
+
+用户先确认 SIM 与官方飞行套件已安装，允许网卡实验；随后明确允许增加一个控制接口查询状态，以及一次 `AT+COPS=0` 自动选网。用户报告 SIM 在手机里能上网，运营商为中国电信。套件/天线安装与 SIM 套餐可用性属于用户报告，工具未进行射频连接、供电或手机侧实测。
+
+两次 Windows UAC 授权后的独立管理员辅助进程均成功；**没有运行厂商安装器、修改 INF 或降低安全策略**：
+
+| 接口 | 原始签名包与结果 |
+| --- | --- |
+| `MI_04` | `qcwwan.inf`，`20.0.72.21`，手动选择包内 `4006:MI_04` 型号给真实 `4009:MI_04`；Code 0、`qcusbwwan`、`oem61.inf`，出现 Windows 网卡/移动宽带接口 |
+| `MI_02` | `qcser.inf`，`30.0.72.25`，另经许可手动选择包内 `4006:MI_02` 型号；Code 0、`qcusbser`、`oem109.inf`，出现 `COM4` 且确认标准 AT 应答 |
+| 父节点及其他接口 | 父 `usb.inf/usbccgp` 保持正常；MI_00/01/03 仍 Code 28，绑定未改 |
+
+只向 Driver Store 暂存上述单个 INF 包（不使用 `pnputil /install`），再用限定目标的 SetupAPI/Newdev 流程选择与安装；没有父 `qcfilter`、其他功能接口或全设备匹配更新。微软说明 [PnPUtil `/add-driver`](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/pnputil-command-syntax) 负责暂存，而 [DiInstallDevice](https://learn.microsoft.com/en-us/windows/win32/api/newdev/nf-newdev-diinstalldevice) 可针对指定设备安装指定驱动。实际返回成功、`NeedReboot=false`；两次操作前后非目标接口绑定比较均相同。
+
+两组 INF/CAT/x64 SYS 均复核原始哈希、可信 CAT 及 SignTool `/kp /c` 成员关系；安装后的 INF、系统驱动 SYS 与源文件哈希一致。**仍没有新增 `4009` 的原厂 INF 匹配；手动选择成功不是厂商正式支持，也没有完成数据传输兼容性或长期稳定性验证。**
+
+证据：[网卡安装](Windows-NDIS-Experiment.json)、[串口安装](Windows-Serial-Experiment.json)、[安装后就绪状态](Windows-Network-Readiness-AfterInstall.json)、[脱敏蜂窝查询](Windows-Cellular-Status.json)。原始设备路径、SIM 标识、完整 MBN 日志、APN 上下文和撤销收据只保留本机工作目录。
+
+### 实际通信与当前失败阶段
+
+`MI_04` 网卡处于 Disconnected、0 bps、无首选 IPv4/网关。Windows MBN 返回部分能力/SIM/射频信息，但多个 `netsh` 查询返回非零，homeprovider 报 `0xffffffff`、上下文查询部分失败 `0x32`；不把部分输出当成所有接口调用成功。随后使用另经授权的 AT 串口交叉核验：
+
+| 查询 | 真实响应摘要 |
+| --- | --- |
+| `AT` | `OK`，确认该接口可接收 AT，而非仅有 COM 名称 |
+| `AT+CPIN?` | `READY` |
+| `AT+CFUN?` | `1,0`；未发送 CFUN 设置/复位 |
+| `AT+CREG?` / `CGREG?` / `CEREG?` | 均 `0,0`，未注册 |
+| `AT+CSQ` / `CESQ` | `99,99` / `99,99,255,255,255,255`，未取得可用质量测量 |
+| `AT+COPS?` | `0`，自动模式但没有已选择运营商 |
+| `AT+CGATT?` | `0`，未附着 |
+| `AT+CGACT?` | 已返回的上下文 1/3/4/5 均未激活 |
+| `AT+CEER` | `EMM attach failed` |
+
+`CSQ=99` 表示未知/无法测量，不应把 Windows 的显示转换当成真实 `-113 dBm`，也不能据此断言天线坏了。注册状态、选网与信号值含义依据 [3GPP TS 27.007 / ETSI TS 127 007，第 7.2/7.3/8.5 节](https://www.etsi.org/deliver/etsi_ts/127000_127099/127007/09.09.00_60/ts_127007v090900p.pdf)。
+
+一次用户明确授权的 `AT+COPS=0` 于 UTC 15:03:10 发送并返回 `OK`；**没有重复请求**。`OK` 只表示命令已接受，随后注册/附着与信号查询仍为上述结果。没有建立数据连接、发送 AT 拨号、改 APN/PIN/USB 模式、重置、改固件/IMEI、启用漫游或发出 DNS/HTTPS 测试。也没有禁用其他网卡、改系统默认路由、DNS、代理或服务。
+
+Windows 驱动自报制造商为 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-00`、固件 `19906.5090.00.02.00.23`；这是设备/驱动提供的身份，不是拆机基带芯片鉴定。它自报 `No voice`；不能凭 AT 或网卡就承诺普通电话，更不能把安装 Windows 驱动等同于 Apple 端可用。
+
+### 下一步与停止边界
+
+当前问题已从“没有任何功能驱动”推进到“可查询，但未入网/附着”。**具体原因仍未定位**：不能据现有读数断言是 SIM、天线、供电、固件限制或某种型号驱动错误，也未排除后续数据传输兼容性问题。优先核验官方飞行套件两路射频连接是否实际接入模块、供电/数据线稳定性、当前位置的电信覆盖，以及模块在原 DJI 使用场景能否用这张 SIM 注册；不自动切频段、强制其他运营商、改 USB 模式或执行“解锁”命令。
+
+还需确认当前就绪的是用户插入的实体 SIM，而非内置 eSIM。DJI 官方 FAQ 说明两者可能需要在 DJI Fly 的模块配件页选择，内置 eSIM 的用途/开通状态也与普通实体卡不同。[DJI 官方：增强图传模块常见问题，第 4/14 项](https://repair.dji.com/help/content?customId=zh-cn03400008285&documentType=artical&lang=zh-CN&paperDocType=paper&re=CN&spaceId=34)。现有 `CPIN: READY` 及 Windows SIM 身份字段不能单独证明已选中那张实体卡；本轮没有切换 SIM，也不据此断言当前一定用了 eSIM。推荐用户在地面原 DJI 场景核对“使用实体 SIM”并做联网对照，不需要起飞；不要向公开仓库提交 SIM 标识。
+
+保留两个已正常启动的实验驱动便于继续诊断。单接口 null-driver 撤销路径及原始收据已准备，但没有实际运行撤销，不能保证“一键恢复”。需要撤销时只针对对应目标接口，保留其他设备正在使用的驱动包；不自动重启或扩大变更范围。
+
+## 历史结果：试装前卡在功能驱动绑定
 
 本轮在沙箱外经工具审查授权只读复查 PnP 与目标网卡，见 [实时采集的历史记录](Windows-Network-Readiness.json)：
 
@@ -41,9 +89,9 @@
 3. Microsoft Update Catalog 本次以 `VID_2CA3&PID_4009`、`Baiwang` 搜索均显示未找到结果；不能据此宣称 Windows Update 永远没有支持包。未采用第三方“驱动管家”。
 4. 修改原 INF 会破坏它与原 CAT 的哈希关系。原签名驱动的手动选择/绑定是**另一个兼容性实验**，不需要篡改 INF，但依然需要明确实验许可，且可能发生断连、Code 10/43 或系统蓝屏。
 
-## 下一步：有许可才做单接口实验
+## 历史方案：试装前的许可与单接口范围
 
-已请求用户确认两项，未收到回答前不执行：
+下列是先前发出的实验条件；上述最新结果说明用户已依次授权且已执行哪些动作，不把此历史段落当成仍未获许可：
 
 - 可上网 SIM 与两路外接天线就绪；授权少量模块流量测试。USB 通电后的自主射频行为不能由工具保证关闭。
 - 是否同意将已核验的**原始签名 NDIS 网卡驱动**手动选择给目标 `MI_04` 做一次兼容性实验；不把该请求当作用户已经同意。

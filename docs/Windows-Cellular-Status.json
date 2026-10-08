@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUTC": "2026-10-08T15:10:54.1151867Z",
+  "target": "USB\\VID_2CA3&PID_4009",
+  "controlInterface": "02",
+  "port": "COM4",
+  "userReportedSimOperator": "China Telecom",
+  "userReportedSimWorksInPhone": true,
+  "reportedByWindowsDriver": {
+    "manufacturer": "Fibocom Wireless Inc.",
+    "model": "NL668T-GL-00-00",
+    "firmwareVersion": "19906.5090.00.02.00.23",
+    "voiceClass": "No voice",
+    "identityIsChipVerification": false,
+    "someNetshQueriesReturnedNonzeroOrIncomplete": true
+  },
+  "statusQueries": [
+    {
+      "command": "AT",
+      "response": "AT\r\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:25.6766562Z"
+    },
+    {
+      "command": "AT+CPIN?",
+      "response": "AT+CPIN?\r\r\n+CPIN: READY\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:25.872154Z"
+    },
+    {
+      "command": "AT+CFUN?",
+      "response": "AT+CFUN?\r\r\n+CFUN: 1,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:25.9812348Z"
+    },
+    {
+      "command": "AT+CREG?",
+      "response": "AT+CREG?\r\r\n+CREG: 0,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.0914634Z"
+    },
+    {
+      "command": "AT+CGREG?",
+      "response": "AT+CGREG?\r\r\n+CGREG: 0,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.2013082Z"
+    },
+    {
+      "command": "AT+CEREG?",
+      "response": "AT+CEREG?\r\r\n+CEREG: 0,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.3119303Z"
+    },
+    {
+      "command": "AT+CSQ",
+      "response": "AT+CSQ\r\r\n+CSQ: 99,99\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.4216231Z"
+    },
+    {
+      "command": "AT+COPS?",
+      "response": "AT+COPS?\r\r\n+COPS: 0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.5305297Z"
+    },
+    {
+      "command": "AT+CGATT?",
+      "response": "AT+CGATT?\r\r\n+CGATT: 0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.6554753Z"
+    },
+    {
+      "command": "AT+CGACT?",
+      "response": "AT+CGACT?\r\r\n+CGACT: 1,0\r\n+CGACT: 3,0\r\n+CGACT: 4,0\r\n+CGACT: 5,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.7642003Z"
+    },
+    {
+      "command": "AT+CESQ",
+      "response": "AT+CESQ\r\r\n+CESQ: 99,99,255,255,255,255\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.8728739Z"
+    },
+    {
+      "command": "AT+CEER",
+      "response": "AT+CEER\r\r\n+CEER: EMM attach failed\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-08T15:09:26.9825291Z"
+    }
+  ],
+  "automaticSelectionRequest": {
+    "command": "AT+COPS=0",
+    "requestWritten": true,
+    "stage": "CommandReturnedOKRegistrationUnverified",
+    "startedAtUTC": "2026-10-08T15:03:10.049292Z",
+    "response": "AT+COPS=0\r\r\nOK\r\n",
+    "maximumWaitSeconds": 180,
+    "dataConnectionRequested": false,
+    "internetVerified": false,
+    "completedAtUTC": "2026-10-08T15:03:10.4272872Z"
+  },
+  "dataConnectionRequested": false,
+  "dnsOrHttpsTestPerformed": false,
+  "internetVerified": false,
+  "limitations": [
+    "These are historical observations on this Windows PC, not guarantees of data/voice compatibility or an Apple transport implementation.",
+    "SIM READY does not prove an active data plan. User reports that this China Telecom SIM works in a phone.",
+    "CSQ 99 and CESQ sentinel values mean measurements unavailable, not a measured -113 dBm reading or proof of an antenna fault.",
+    "COPS returning OK only acknowledges the request; registration, attachment, a data bearer and Internet must be verified separately.",
+    "Raw MBN output, subscriber identifiers, operator/profile context details and topology remain private.",
+    "Current SIM readiness does not establish that the user-inserted physical SIM rather than the internal eSIM is selected. No SIM selection was changed."
+  ],
+  "physicalSimSelectionVerified": false
+}

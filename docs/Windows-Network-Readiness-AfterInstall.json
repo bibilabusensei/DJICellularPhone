@@ -1,0 +1,64 @@
+{
+    "schemaVersion":  1,
+    "collectedAtUTC":  "2026-10-08T15:09:46.2776010Z",
+    "target":  "USB\\VID_2CA3\u0026PID_4009",
+    "stage":  "TargetNetworkNotReady",
+    "deviceMetadataReadSucceeded":  true,
+    "networkMetadataReadSucceeded":  true,
+    "nodes":  [
+                  {
+                      "interface":  "02",
+                      "class":  "Ports",
+                      "status":  "OK",
+                      "problemCode":  0
+                  },
+                  {
+                      "interface":  "03",
+                      "class":  null,
+                      "status":  "Error",
+                      "problemCode":  28
+                  },
+                  {
+                      "interface":  "04",
+                      "class":  "Net",
+                      "status":  "OK",
+                      "problemCode":  0
+                  },
+                  {
+                      "interface":  "parent",
+                      "class":  "USB",
+                      "status":  "OK",
+                      "problemCode":  0
+                  },
+                  {
+                      "interface":  "00",
+                      "class":  null,
+                      "status":  "Error",
+                      "problemCode":  28
+                  },
+                  {
+                      "interface":  "01",
+                      "class":  null,
+                      "status":  "Error",
+                      "problemCode":  28
+                  }
+              ],
+    "targetAdapters":  [
+                           {
+                               "interface":  "04",
+                               "status":  "Disconnected",
+                               "hasPreferredIPv4":  false,
+                               "hasIPv4Gateway":  false,
+                               "hasConfiguredDns":  true
+                           }
+                       ],
+    "activeTrafficTestPerformed":  false,
+    "internetVerified":  false,
+    "limitations":  [
+                        "Only current device and target adapter metadata were read. No driver, network setting, SIM or module operation was changed.",
+                        "No AT command, DNS query, ping, TCP/HTTPS request, connection activation or APN change was issued.",
+                        "Addresses, adapter GUIDs and instance suffixes stay private. No unrelated Wi-Fi, Ethernet or VPN adapter is used as a fallback.",
+                        "Link/IP/gateway/DNS configuration alone is not proof of cellular registration, a data bearer or Internet access.",
+                        "A separate traffic test requires SIM/antenna readiness and source-interface/route attribution."
+                    ]
+}

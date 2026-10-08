@@ -1,0 +1,65 @@
+{
+  "mode": "Install",
+  "startedAtUTC": "2026-10-08T14:41:11.2120877Z",
+  "stage": "InstallReturnedSuccessNotInternetProof",
+  "internetVerified": false,
+  "administrator": true,
+  "binding": {
+    "DriverSelected": true,
+    "Success": true,
+    "NeedReboot": false,
+    "Error": 0
+  },
+  "nodesAfter": [
+    {
+      "interface": "02",
+      "status": "Error",
+      "class": null,
+      "problemCode": 28,
+      "driverInf": null,
+      "service": null
+    },
+    {
+      "interface": "03",
+      "status": "Error",
+      "class": null,
+      "problemCode": 28,
+      "driverInf": null,
+      "service": null
+    },
+    {
+      "interface": "04",
+      "status": "OK",
+      "class": "Net",
+      "problemCode": 0,
+      "driverInf": "oem61.inf",
+      "service": "qcusbwwan"
+    },
+    {
+      "interface": "parent",
+      "status": "OK",
+      "class": "USB",
+      "problemCode": 0,
+      "driverInf": "usb.inf",
+      "service": "usbccgp"
+    },
+    {
+      "interface": "00",
+      "status": "Error",
+      "class": null,
+      "problemCode": 28,
+      "driverInf": null,
+      "service": null
+    },
+    {
+      "interface": "01",
+      "status": "Error",
+      "class": null,
+      "problemCode": 28,
+      "driverInf": null,
+      "service": null
+    }
+  ],
+  "otherInterfaceBindingsUnchanged": true,
+  "completedAtUTC": "2026-10-08T14:41:25.3435938Z"
+}
