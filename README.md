@@ -10,8 +10,10 @@
 - 展示真实 Windows 枚举的脱敏历史快照；不会把旧报告显示成当前连接。
 - 只读发现 `VID_2CA3&PID_4009`、五个厂商自定义接口节点、Code 28 缺兼容驱动；未发现目标 COM 端口。实际 AT/MBIM/RNDIS/QMI 协议与芯片未知。
 - Windows 只读枚举脚本、硬件可行性报告、可校验的 GitHub Actions IPA 打包流程。
+- 核对电脑内 Baiwang 2.2 驱动：八个 INF 仅含旧 PID `4006`，与当前 `4009` 不匹配；标准只读描述符已获取五个接口、14 个端点。
+- 独立的 Windows WinUSB 单接口绑定草案；仅为源文件，未签名、未安装，不是网卡/电话驱动。
 
-详见 [USB 发现报告](docs/IG831T-USB-Discovery.md)、[硬件与系统可行性](docs/Hardware-Feasibility.md)、[构建核验记录](docs/Build-Status.md)。
+详见 [USB 发现报告](docs/IG831T-USB-Discovery.md)、[Windows 驱动核查](docs/Windows-Driver-Audit.md)、[硬件与系统可行性](docs/Hardware-Feasibility.md)、[构建核验记录](docs/Build-Status.md)。本次 Windows 研究文件不改变 v0.2.0 IPA 的业务能力。
 
 ## 构建与下载
 
@@ -46,6 +48,24 @@ xcodebuild -project DJICellularPhone.xcodeproj -scheme DJICellularPhone \
 脚本尝试 `Get-PnpDevice`、两个 CIM 类；不允许访问时回退到 `PnPUtil /enum-devices`。只读查询设备树、驱动元数据与串口名称，不安装驱动、不扫描重置设备、不打开 COM、不发送 AT、不改固件/IMEI/注册表、不发起蜂窝连接。模块上电后的自主注册行为不由脚本控制。
 
 原始实例 ID、拓扑等仅保留在被忽略的 `diagnostics-private/`；公开 JSON 中实例尾段脱敏。**不要上传原始日志。** 若未来允许查询 SIM，也必须对 IMEI、ICCID、IMSI、号码脱敏。
+
+### 驱动文件与标准描述符
+
+用户授权后的独立只读工具：
+
+```powershell
+.\scripts\Audit-IG831TDriver.ps1 `
+  -DriverRoot 'C:\Program Files (x86)\Baiwang\Baiwang_Windows_USB_Driver(Q)_NDIS\DriverInstaller' `
+  -ReportPath .\docs\Windows-Driver-Audit.json
+
+.\scripts\Read-IG831TDescriptors.ps1 `
+  -OutputDirectory .\diagnostics-private `
+  -SnapshotPath .\docs\IG831T-USB-Descriptors.json
+```
+
+第一个只审阅 INF/CAT 文件，不运行安装器；ID 命中和 CAT 的 Authenticode 状态不等于完整兼容性或目录成员验证。第二个仅通过现有 hub 驱动读取指定 `2CA3:4009` 的标准设备/配置描述符，不安装驱动、不打开 COM、不读写业务端点。hub 访问可能需要经用户许可在沙箱外/提升权限运行；访问被拒绝时脚本停止，不改系统权限。原始拓扑/二进制只写私有目录，公开快照不含实例后缀或字符串。
+
+[WinUSB 绑定草案](drivers/windows/README.md) 没有 CAT/签名，未安装；不要直接用它强绑设备，也不要修改 Baiwang INF、导入信任证书或关闭系统安全机制。
 
 ## 关键边界
 

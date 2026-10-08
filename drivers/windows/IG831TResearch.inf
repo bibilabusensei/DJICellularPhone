@@ -1,0 +1,35 @@
+[Version]
+Signature = "$Windows NT$"
+Class = USBDevice
+ClassGUID = {88BAE032-5A81-49F0-BC3D-A4FF138216D6}
+Provider = %ProviderName%
+CatalogFile = IG831TResearch.cat
+DriverVer = 10/08/2026,0.1.0.0
+PnpLockdown = 1
+
+[Manufacturer]
+%ProviderName% = ResearchModels,NTamd64.10.0,NTarm64.10.0
+
+[ResearchModels.NTamd64.10.0]
+%InterfaceName% = ResearchInstall,USB\VID_2CA3&PID_4009&MI_00
+
+[ResearchModels.NTarm64.10.0]
+%InterfaceName% = ResearchInstall,USB\VID_2CA3&PID_4009&MI_00
+
+[ResearchInstall]
+Include = winusb.inf
+Needs = WINUSB.NT
+
+[ResearchInstall.Services]
+Include = winusb.inf
+Needs = WINUSB.NT.Services
+
+[ResearchInstall.HW]
+AddReg = ResearchInterface
+
+[ResearchInterface]
+HKR,,DeviceInterfaceGUIDs,0x00010000,"{B4D208EC-CB50-4E01-B922-4644265653CB}"
+
+[Strings]
+ProviderName = "DJICellularPhone Research"
+InterfaceName = "IG831T interface 00 research transport (not a modem)"
