@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUTC": "2026-10-09T05:53:22.4296178Z",
+  "targetControlInterface": "USB\\VID_2CA3&PID_4009&MI_02",
+  "controlService": "qcusbser",
+  "atHandshakeResult": "OK",
+  "currentModeRead": {
+    "command": "AT+GTUSBMODE?",
+    "result": "OK",
+    "value": 30,
+    "collectedAtUTC": "2026-10-09T05:52:51.5080971Z"
+  },
+  "supportedModesRead": {
+    "command": "AT+GTUSBMODE=?",
+    "result": "OK",
+    "range": "(30-31)",
+    "values": [30, 31],
+    "collectedAtUTC": "2026-10-09T05:52:51.6172119Z"
+  },
+  "mode31ProtocolMapping": null,
+  "standardUsbNetworkModeVerified": false,
+  "appleUsbTransportVerified": false,
+  "realVoiceCallVerified": false,
+  "usbModeSetResetDialOrConfigurationCommandSent": false,
+  "targetBindingsAndNetworkMetadataUnchanged": true,
+  "networkMetadataBeforeAndAfter": {
+    "status": "Up",
+    "ipv4AddressCount": 1
+  },
+  "interfaceMetadataBeforeAndAfter": [
+    {"interface": "MI_00", "problemCode": 28, "service": null},
+    {"interface": "MI_01", "problemCode": 28, "service": null},
+    {"interface": "MI_02", "problemCode": 0, "service": "qcusbser"},
+    {"interface": "MI_03", "problemCode": 28, "service": null},
+    {"interface": "MI_04", "problemCode": 0, "service": "qcusbwwan"}
+  ],
+  "internetRetestedInThisQuery": false,
+  "limitations": [
+    "Mode 31 has not been selected or tested. Its protocol mapping for this DJI firmware is unknown.",
+    "A supported numeric value is not proof of standard NCM/ECM, automatic addressing, Apple compatibility or audio support.",
+    "Mode meanings from other Fibocom models or generic NL668 manuals must not be applied to this customized firmware.",
+    "Before/after metadata equality is not a fresh Internet test or a guarantee against autonomous module activity.",
+    "Raw AT responses, instance suffixes, interface GUIDs and addresses remain private."
+  ]
+}
