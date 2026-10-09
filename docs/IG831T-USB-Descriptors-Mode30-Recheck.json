@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUTC": "2026-10-09T10:55:35.7452105Z",
+  "method": "Parent hub standard GET_DESCRIPTOR (device and configuration index 0 only)",
+  "vendorId": "2CA3",
+  "productId": "4009",
+  "usbBCD": "0x0200",
+  "deviceBCD": "0x0318",
+  "deviceClass": "00",
+  "deviceSubclass": "00",
+  "deviceProtocol": "00",
+  "configurationCount": 1,
+  "configuration": {
+    "index": 0,
+    "value": 1,
+    "totalLength": 209,
+    "interfaceCount": 5,
+    "attributes": "0xA0",
+    "maxPowerField": 250,
+    "interfaces": [
+      {
+        "number": 0,
+        "alternateSetting": 0,
+        "endpointCount": 2,
+        "class": "FF",
+        "subclass": "FF",
+        "protocol": "FF",
+        "endpoints": [
+          {
+            "address": "0x81",
+            "direction": "IN",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          },
+          {
+            "address": "0x01",
+            "direction": "OUT",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          }
+        ]
+      },
+      {
+        "number": 1,
+        "alternateSetting": 0,
+        "endpointCount": 3,
+        "class": "FF",
+        "subclass": "00",
+        "protocol": "00",
+        "endpoints": [
+          {
+            "address": "0x83",
+            "direction": "IN",
+            "transferType": "Interrupt",
+            "attributes": "0x03",
+            "maxPacketSize": 10,
+            "interval": 9
+          },
+          {
+            "address": "0x82",
+            "direction": "IN",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          },
+          {
+            "address": "0x02",
+            "direction": "OUT",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "alternateSetting": 0,
+        "endpointCount": 3,
+        "class": "FF",
+        "subclass": "00",
+        "protocol": "00",
+        "endpoints": [
+          {
+            "address": "0x85",
+            "direction": "IN",
+            "transferType": "Interrupt",
+            "attributes": "0x03",
+            "maxPacketSize": 10,
+            "interval": 9
+          },
+          {
+            "address": "0x84",
+            "direction": "IN",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          },
+          {
+            "address": "0x03",
+            "direction": "OUT",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          }
+        ]
+      },
+      {
+        "number": 3,
+        "alternateSetting": 0,
+        "endpointCount": 3,
+        "class": "FF",
+        "subclass": "00",
+        "protocol": "00",
+        "endpoints": [
+          {
+            "address": "0x87",
+            "direction": "IN",
+            "transferType": "Interrupt",
+            "attributes": "0x03",
+            "maxPacketSize": 10,
+            "interval": 9
+          },
+          {
+            "address": "0x86",
+            "direction": "IN",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          },
+          {
+            "address": "0x04",
+            "direction": "OUT",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          }
+        ]
+      },
+      {
+        "number": 4,
+        "alternateSetting": 0,
+        "endpointCount": 3,
+        "class": "FF",
+        "subclass": "FF",
+        "protocol": "FF",
+        "endpoints": [
+          {
+            "address": "0x89",
+            "direction": "IN",
+            "transferType": "Interrupt",
+            "attributes": "0x03",
+            "maxPacketSize": 8,
+            "interval": 9
+          },
+          {
+            "address": "0x88",
+            "direction": "IN",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          },
+          {
+            "address": "0x05",
+            "direction": "OUT",
+            "transferType": "Bulk",
+            "attributes": "0x02",
+            "maxPacketSize": 512,
+            "interval": 0
+          }
+        ]
+      }
+    ],
+    "extraDescriptorHeaders": [
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 4
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 4
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      },
+      {
+        "type": "0x24",
+        "length": 4
+      },
+      {
+        "type": "0x24",
+        "length": 5
+      }
+    ]
+  },
+  "limitations": [
+    "No strings, serial numbers, SIM identifiers, vendor requests, bulk transfers, AT commands or networking were read or sent.",
+    "Descriptors do not establish AT/QMI/MBIM/NDIS protocol compatibility, chipset identity or voice support.",
+    "Raw descriptors and hub topology remain private; this snapshot excludes paths and device instance suffixes.",
+    "No driver, registry, firmware, USB configuration or endpoint state was changed."
+  ]
+}
