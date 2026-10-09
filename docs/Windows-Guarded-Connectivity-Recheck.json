@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "target": "USB\\VID_2CA3&PID_4009",
+  "summary": {
+    "schemaVersion": 1,
+    "collectedAtUTC": "2026-10-09T11:11:10.3812810Z",
+    "stage": "Completed",
+    "statusQueries": [
+      {
+        "command": "AT",
+        "result": "OK"
+      },
+      {
+        "command": "AT+GTUSBMODE?",
+        "result": "OK"
+      },
+      {
+        "command": "AT+CEREG?",
+        "result": "OK"
+      }
+    ],
+    "mode30Confirmed": true,
+    "homeRegistrationConfirmed": true,
+    "trafficTestPerformed": true,
+    "internetVerified": true,
+    "preTrafficStateUnchanged": true,
+    "postStateAvailable": true,
+    "allObservedNetworkMetadataUnchanged": true,
+    "targetDeviceBindingsUnchanged": true,
+    "observedNonModuleAdapterCount": 23,
+    "mutatingModuleCommandsSent": false,
+    "driverOrSystemNetworkConfigurationChangedByTool": false,
+    "droneFunctionalityTested": false,
+    "appleDeviceTested": false,
+    "completedAtUTC": "2026-10-09T11:13:20.7929991Z",
+    "limitations": [
+      "Only three previously verified AT/status queries; no mode set, reset, selection, dial, hangup, APN, firmware, IMEI or persistent module write.",
+      "Small bound DNS/TLS HEAD test reuses the existing guarded probe; no other adapter fallback, default resolver or application proxy.",
+      "Read-only before/after comparison covers observed adapters, network driver metadata, addresses, IP interfaces, DNS and active routing table; lifetimes and packet counters are excluded.",
+      "Point-in-time comparison is not continuous monitoring or an absolute no-failure guarantee; autonomous system/module changes remain possible.",
+      "No drone flight, power measurement, Apple direct-USB test or independent inspection of future firmware state; future drone compatibility is not guaranteed by this test.",
+      "Raw device identifiers, addresses, routes, DNS and detailed exceptions remain private. No repair, driver reinstall, interface disable or system setting change is attempted on failure."
+    ]
+  },
+  "traffic": {
+    "schemaVersion": 1,
+    "collectedAtUTC": "2026-10-09T11:12:35.4830014Z",
+    "target": "USB\\VID_2CA3&PID_4009&MI_04",
+    "stage": "ModuleBoundDnsAndHttpsVerified",
+    "homeRegistrationConfirmed": true,
+    "socketOutgoingInterfaceEnforced": true,
+    "applicationProxyUsed": false,
+    "otherAdapterFallbackAllowed": false,
+    "activeTrafficTestPerformed": true,
+    "internetVerified": true,
+    "attempts": [
+      {
+        "host": "example.com",
+        "dnsSucceeded": true,
+        "httpsSucceeded": true,
+        "routeMatchesTarget": true,
+        "dnsResponseBytes": 61,
+        "dnsSocketSourceAndInterfaceVerified": true,
+        "httpStatus": 200,
+        "tlsProtocol": "Tls12",
+        "tlsCertificateAndHostnameValidated": true,
+        "httpsResponseHeaderBytes": 311,
+        "httpsSocketSourceAndInterfaceVerified": true
+      }
+    ],
+    "targetIdentityAndLinkStable": true,
+    "targetReceivedBytesDelta": 4932,
+    "targetSentBytesDelta": 827,
+    "targetCountersIncreased": true,
+    "completedAtUTC": "2026-10-09T11:12:41.0193175Z",
+    "limitations": [
+      "Bound IPv4 UDP DNS and direct TCP/TLS HEAD requests only; no application proxy, default resolver or other adapter fallback.",
+      "Only target-configured DNS servers and two fixed public hostnames are considered. No redirects or webpage bodies are downloaded.",
+      "No driver, APN, SIM selection, USB mode, route, DNS, proxy, service, security setting or other adapter was changed.",
+      "Counters may also include background traffic and are not the sole path proof. Source binding, IP_UNICAST_IF, route attribution and TLS validation are required.",
+      "No packet capture, independent audit of third-party system interception, bandwidth benchmark, voice or Apple device test was performed.",
+      "Source addresses, interface GUIDs, DNS servers, resolved addresses and exception details remain private. Success is a historical test result, not a guarantee of all sites or future stability."
+    ]
+  },
+  "observedFinalTargetInterfaces": [
+    {
+      "interface": "00",
+      "problemCode": 28,
+      "service": null,
+      "driverInf": null
+    },
+    {
+      "interface": "01",
+      "problemCode": 28,
+      "service": null,
+      "driverInf": null
+    },
+    {
+      "interface": "02",
+      "problemCode": 0,
+      "service": "qcusbser",
+      "driverInf": "oem109.inf"
+    },
+    {
+      "interface": "03",
+      "problemCode": 28,
+      "service": null,
+      "driverInf": null
+    },
+    {
+      "interface": "04",
+      "problemCode": 0,
+      "service": "qcusbwwan",
+      "driverInf": "oem61.inf"
+    },
+    {
+      "interface": "parent",
+      "problemCode": 0,
+      "service": "usbccgp",
+      "driverInf": "usb.inf"
+    }
+  ],
+  "observedFinalModuleNetwork": {
+    "status": "Up",
+    "preferredIPv4Count": 1
+  },
+  "independentMetadataComparisonPassed": true
+}
