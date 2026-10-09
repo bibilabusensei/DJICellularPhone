@@ -6,4 +6,7 @@ Payload/
 *.xcworkspace/
 DerivedData/
 diagnostics-private/
+**/diagnostics-private/
+drivers/windows/Driver/
+drivers/windows/ig831t-cache-*/
 .DS_Store

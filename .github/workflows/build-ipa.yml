@@ -80,3 +80,30 @@ jobs:
           path: dist/*-build.log
           if-no-files-found: ignore
           retention-days: 14
+  publish-research-ipa:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: DJICellularPhone-unsigned-ipa
+          path: dist
+      - name: Verify checksum and publish unsigned research IPA
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cd dist
+          sha256sum --check SHA256SUMS.txt
+          test -s DJICellularPhone-unsigned.ipa
+          test -s build-manifest.json
+          gh release create "ios-research-${GITHUB_RUN_NUMBER}" \
+            DJICellularPhone-unsigned.ipa build-manifest.json SHA256SUMS.txt \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "iPhone/iPad unsigned research IPA - build ${GITHUB_RUN_NUMBER}" \
+            --notes 'Unsigned iPhone/iPad research UI only. Requires your own valid signing and provisioning. No live USB modem transport, external SIM Internet, cellular calls or DriverKit entitlement. Re-signing does not grant those capabilities. See build-manifest.json and SHA256SUMS.txt for the exact commit and package.'

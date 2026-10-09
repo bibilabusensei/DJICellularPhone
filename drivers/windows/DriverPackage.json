@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "source": "https://www.quectel.com/content/uploads/2021/04/Quectel_Windows_USB_DriverQ_NDIS_V2.8_EN.zip",
+  "archiveSha256": "b5cc61718e24ff21860a754e035d0ec8b728188967c1890cb649a4ce5a9aed97",
+  "archiveBytes": 9923461,
+  "setupSha256": "60fb07777f63849cbaae56a248a5f452fa64a837095412515dfada7ad5e88a1b",
+  "msiSha256": "b55d3507943cd0e807a92dc9a770c20cb13bef9a586aeded9451fb032c274582",
+  "cabinetSha256": "c6537856fd61ac2e157d4327a89db6d5e96ea37355c82f5812b6ff5660bbf7c5",
+  "binaryRedistributionPermissionConfirmed": false,
+  "verifiedPlatform": "One Windows x64 PC; Windows 10/11 x64 only in tooling, not universal compatibility",
+  "target": "USB\\VID_2CA3&PID_4009",
+  "networkDriverVersion": "20.0.72.21",
+  "controlDriverVersion": "30.0.72.25",
+  "native4009InfMatch": false,
+  "files": [
+    { "path": "qcwwan.inf", "cabinetKey": "qcwwan.inf", "sha256": "ae4bb7c4f71ce8ac36b205b0d1198565d981f8f43549ef4286e1073e8daa3988" },
+    { "path": "qcwwan.cat", "cabinetKey": "qcwwan.cat", "sha256": "1ff0ebc3cf604dcf20591faa76e2abaf3444384eef9b1be78a339cd2b27ec0d9" },
+    { "path": "ndis/6.2/amd64/qcusbwwan.sys", "cabinetKey": "qcusbwwan.sys", "sha256": "0ee1ffd0741cdc95903f7cd2860c455500748758842037b188456ceb69fe2459" },
+    { "path": "ndis/6.2/i386/qcusbwwan.sys", "cabinetKey": "qcusbwwan.sys1", "sha256": "f12c330415066dd820d3a46bb5a2c8de8b3d81f6f1c664af858a73d515ed00d1" },
+    { "path": "qcser.inf", "cabinetKey": "qcser.inf", "sha256": "08f4300656afbecab57b09eb55fa5c336f2bdcad1b579c38de81b4256bd1736a" },
+    { "path": "qcser.cat", "cabinetKey": "qcser.cat", "sha256": "171a8804e5295d942201393c44389dabde96f97eeadd9931629aeb8fb4fb2043" },
+    { "path": "serial/amd64/qcusbser.sys", "cabinetKey": "qcusbser.sys", "sha256": "fe77a74cbb798e0b6e49437cc20d0c6a6edf1d164ce1cfb5e3157db75943b87d" },
+    { "path": "serial/i386/qcusbser.sys", "cabinetKey": "qcusbser.sys1", "sha256": "2baa44863cebadb28cd35b9f66532b3006b449ebf6cd6580e3482b6cb8ce065f" }
+  ]
+}

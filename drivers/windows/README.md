@@ -1,4 +1,10 @@
-# IG831T Windows 研究绑定草案
+# IG831T Windows 兼容安装与研究
+
+**先看可分享的 Windows 兼容安装工具：** [中文安装说明](COMPATIBILITY.md)、[Release 下载](https://github.com/bibilabusensei/DJICellularPhone/releases)、[版本说明](RELEASE-NOTES.md)。这是基于原始签名驱动旧型号条目的二代安装/绑定方案，不修改厂商文件；公开包不内置厂商二进制，由工具从官网取包、静态提取并限定安装 MI_04 / 可选 MI_02。已在本机联网实测通过，但仍是实验性、非官方、Windows x64 专用，不承诺所有设备兼容。
+
+**下方是独立历史研究草案，不是上述兼容安装工具的驱动，不要安装混用。**
+
+## WinUSB 研究绑定草案（未安装）
 
 **不是可安装成品，不是串口、调制解调器或网卡驱动。未安装、未进行设备绑定测试。**
 

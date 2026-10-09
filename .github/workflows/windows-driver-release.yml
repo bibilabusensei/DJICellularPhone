@@ -1,0 +1,53 @@
+name: Publish Windows compatibility installer
+on:
+  push:
+    branches: [main]
+    paths:
+      - drivers/windows/**
+      - .github/workflows/windows-driver-release.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: windows-compatibility-release
+  cancel-in-progress: false
+jobs:
+  validate-and-publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate source tools without accessing hardware
+        run: |
+          & ./drivers/windows/Validate-WindowsTools.ps1
+      - name: Build standalone source-only compatibility installer
+        run: |
+          & ./drivers/windows/Build-WindowsRelease.ps1 -OutputDirectory ./dist/windows-installer -Commit $env:GITHUB_SHA
+      - name: Publish experimental Windows release without vendor binaries
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = 'windows-installer-v0.1.0'
+          $ErrorActionPreference = 'Continue'
+          gh release view $tag --json tagName 2>$null
+          $releaseExists = $LASTEXITCODE -eq 0
+          $ErrorActionPreference = 'Stop'
+          if ($releaseExists) { throw 'This version already exists. Bump the version instead of replacing released assets.' }
+          $title = (Get-Content ./dist/windows-installer/RELEASE-NOTES.md -Encoding UTF8 -TotalCount 1).TrimStart('# ')
+          gh release create $tag ./dist/windows-installer/*.zip ./dist/windows-installer/SHA256SUMS.txt `
+            --target $env:GITHUB_SHA --prerelease `
+            --title $title `
+            --notes-file ./dist/windows-installer/RELEASE-NOTES.md
+          if ($LASTEXITCODE -ne 0) { throw 'Release publication failed; no successful download claim should be made.' }
+          "### Windows experimental compatibility installer published" >> $env:GITHUB_STEP_SUMMARY
+          "No vendor binaries included. Original signed drivers are obtained from the pinned official source on the user PC." >> $env:GITHUB_STEP_SUMMARY
