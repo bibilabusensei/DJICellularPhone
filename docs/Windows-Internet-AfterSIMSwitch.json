@@ -1,0 +1,47 @@
+{
+    "schemaVersion":  1,
+    "collectedAtUTC":  "2026-10-09T04:50:59.6568734Z",
+    "target":  "USB\\VID_2CA3\u0026PID_4009\u0026MI_04",
+    "stage":  "ModuleBoundDnsAndHttpsVerified",
+    "homeRegistrationConfirmed":  true,
+    "socketOutgoingInterfaceEnforced":  true,
+    "applicationProxyUsed":  false,
+    "otherAdapterFallbackAllowed":  false,
+    "activeTrafficTestPerformed":  true,
+    "internetVerified":  true,
+    "attempts":  [
+                     {
+                         "host":  "example.com",
+                         "dnsSucceeded":  false,
+                         "httpsSucceeded":  false,
+                         "routeMatchesTarget":  false,
+                         "failureType":  "MethodInvocationException"
+                     },
+                     {
+                         "host":  "example.com",
+                         "dnsSucceeded":  true,
+                         "httpsSucceeded":  true,
+                         "routeMatchesTarget":  true,
+                         "dnsResponseBytes":  61,
+                         "dnsSocketSourceAndInterfaceVerified":  true,
+                         "httpStatus":  200,
+                         "tlsProtocol":  "Tls12",
+                         "tlsCertificateAndHostnameValidated":  true,
+                         "httpsResponseHeaderBytes":  311,
+                         "httpsSocketSourceAndInterfaceVerified":  true
+                     }
+                 ],
+    "targetIdentityAndLinkStable":  true,
+    "targetReceivedBytesDelta":  4973,
+    "targetSentBytesDelta":  844,
+    "targetCountersIncreased":  true,
+    "completedAtUTC":  "2026-10-09T04:51:16.5615471Z",
+    "limitations":  [
+                        "Bound IPv4 UDP DNS and direct TCP/TLS HEAD requests only; no application proxy, default resolver or other adapter fallback.",
+                        "Only target-configured DNS servers and two fixed public hostnames are considered. No redirects or webpage bodies are downloaded.",
+                        "No driver, APN, SIM selection, USB mode, route, DNS, proxy, service, security setting or other adapter was changed.",
+                        "Counters may also include background traffic and are not the sole path proof. Source binding, IP_UNICAST_IF, route attribution and TLS validation are required.",
+                        "No packet capture, independent audit of third-party system interception, bandwidth benchmark, voice or Apple device test was performed.",
+                        "Source addresses, interface GUIDs, DNS servers, resolved addresses and exception details remain private. Success is a historical test result, not a guarantee of all sites or future stability."
+                    ]
+}

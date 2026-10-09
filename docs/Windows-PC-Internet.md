@@ -1,8 +1,50 @@
 # Windows 电脑上网验证
 
-更新：2026-10-08（香港）。用户明确调整优先级：**先验证这台 Windows PC 能否通过现有 IG831T 上网；iPhone、iPad 驱动与电话功能暂不推进。** 不把研究 UI、驱动入库或其他网卡访问成功当成模块上网。
+更新：2026-10-09（香港）。用户明确调整优先级：**先验证这台 Windows PC 能否通过现有 IG831T 上网。此阶段现已实测通过；iPhone、iPad 驱动与电话功能仍未实现。** 不把研究 UI、驱动入库或其他网卡访问成功当成模块上网。
 
-## 最新结果：网卡/控制串口已启动，注册与附着仍失败
+## 最新结果：换卡后，模块路径的 DNS 与 HTTPS 已通过
+
+用户报告在原 DJI 场景切换 SIM、重新插接电脑，模块绿灯长亮，Windows 显示手机网络。没有仅据灯光/界面宣布成功，而是重新查询状态并单独做固定接口的小流量测试。**2026-10-09 12:50:59–12:51:16（香港），目标 `2CA3:4009:MI_04` 上的 DNS 和直接 HTTPS 请求成功，`internetVerified=true`。**
+
+| 项目 | 换卡后实际结果 |
+| --- | --- |
+| SIM / 功能级别 | `CPIN: READY`，`CFUN: 1,0` |
+| 运营商 / EPS 注册 | `COPS: 0,0,"CHN-CT",7`，`CEREG: 0,1`，本地 LTE 注册，非漫游 |
+| 分组附着 / 上下文 | `CGATT: 1`；上下文 1、5 已激活，3、4 未激活 |
+| 信号 / 失败原因 | 本轮复查 `CSQ: 28,99`，`CEER: No cause information available`；不把 CSQ 当测速 |
+| 电路域注册 | `CREG: 0,0`；不证明普通电话可用 |
+| 目标驱动 / 地址 | 原 `qcusbwwan` 网卡 Up、Code 0；一个首选 IPv4、有网关及配置 DNS |
+| DNS | 第一个目标 DNS 未及时响应；第二个目标 DNS 返回公开 A 记录，61 字节；没有换网卡或改 DNS |
+| HTTPS | `example.com`，TLS 1.2，证书/主机名校验通过，HEAD 返回 HTTP 200，响应头 311 字节 |
+| 路径核验 | DNS 与 HTTPS 均绑定目标 IPv4 和出接口；目标路由匹配，socket 源地址/出接口读回核验通过 |
+| 辅助证据 | 目标网卡身份/链路稳定，接收增加 4,973 字节、发送增加 844 字节；计数器不是唯一依据 |
+
+证据：[换卡后网卡就绪](Windows-Network-Readiness-AfterSIMSwitch.json)、[换卡后蜂窝状态](Windows-Cellular-Status-AfterSIMSwitch.json)、[限定接口的 Internet 实测](Windows-Internet-AfterSIMSwitch.json)。就绪工具的 `internetVerified=false` 表示它没有发送流量，不与稍后的独立流量实测冲突。10 月 8 日的失败证据保留，不覆盖成成功。
+
+### 为什么不是其他现有网络的假成功
+
+`scripts/Test-IG831TInternet.ps1` 先核验唯一的目标 USB 网卡、Code 0、`qcusbwwan`、首选源地址、强主机模式，以及五分钟内的本地 EPS 注册。之后使用 `scripts/IG831TInterfaceProbe.cs` 的独立 IPv4 socket：
+
+1. 同时绑定具体模块源地址与 Windows `IP_UNICAST_IF`，设置值用网络字节序，读取后核对主机字节序的接口号。[Microsoft：IPPROTO_IP socket options](https://learn.microsoft.com/en-us/windows/win32/winsock/ipproto-ip-socket-options)
+2. DNS 只发送到目标接口配置的 IPv4 DNS，验证响应 ID、问题及公开地址；不使用系统默认解析器或私网/代理 fake-IP 作为网站目的地址。
+3. 对 DNS 服务器及 HTTPS 目的地址分别核验目标接口上的路由；直接 TCP/TLS 请求固定域名，不使用 HTTP 应用代理、不跳过证书验证、不跟随重定向。
+4. 回查实际 socket 源地址、出接口、目的地址，并核验目标身份与链路未变；只有 DNS、HTTPS、选路和网卡计数增量共同满足才记为成功。
+
+没有禁用 Wi-Fi/以太网/VPN，没有改系统 DNS、默认路由、APN、SIM 选择、USB 模式或 Windows 服务；也没有重复 `AT+COPS=0`、安装更多接口、重启、修改固件/IMEI或安全设置。本轮只执行已获许可的状态查询与少量数据请求，不是严格零流量 USB 枚举。低层系统拦截未做独立审计，未抓包；绑定验证针对测试 socket，不宣称电脑所有后台请求或所有应用都经过模块。
+
+### 当前可以和不可以下的结论
+
+- **可以：** 这台电脑、现有手动选择的原始签名驱动、当前 SIM/射频/配置组合，已经能通过模块完成一次公网 DNS 与 HTTPS 访问。
+- **不可以：** 宣称所有网站、IPv6、长期稳定性、重插恢复、普通电话或 Apple 端已经验证。Windows 显示的 150 Mbps 是链路报告，不是本次实际下载速度。
+- 用户表示增强图传年费到期、不续费；本轮没有购买/续订 DJI 服务，也没有修改服务或模块配置。该测试不能替代 DJI 账户服务状态核验，不能把增强图传订阅与运营商 SIM 流量费混为一谈。
+- SIM 切换由用户报告，工具没有公开/比对卡号，未独立证明物理卡身份或仅由换卡这一因素解决了此前失败。
+- 暂不再装驱动、改 DNS 或 APN；保留当前可用状态。需要复测时按 README 的许可/注册检查工具执行。先评估 Apple 权限和传输协议，而不是把 Windows 驱动直接移植到 iPhone/iPad。
+
+验证工具还通过了 Windows PowerShell 5.1 的 C# 编译、压缩 DNS 正例，以及错误 ID、截断、指针循环、私网地址、无许可、漫游、过期/未来注册和缺少 OK 的离线停止条件检查；这些离线测试不打开 socket、不访问硬件。未修改 Apple App 代码，本次不生成新的 IPA。
+
+## 历史结果（2026-10-08）：网卡/控制串口已启动，注册与附着仍失败
+
+**以下记录描述当时状态，不是 10 月 9 日的当前失败。**
 
 用户先确认 SIM 与官方飞行套件已安装，允许网卡实验；随后明确允许增加一个控制接口查询状态，以及一次 `AT+COPS=0` 自动选网。用户报告 SIM 在手机里能上网，运营商为中国电信。套件/天线安装与 SIM 套餐可用性属于用户报告，工具未进行射频连接、供电或手机侧实测。
 
@@ -20,7 +62,7 @@
 
 证据：[网卡安装](Windows-NDIS-Experiment.json)、[串口安装](Windows-Serial-Experiment.json)、[安装后就绪状态](Windows-Network-Readiness-AfterInstall.json)、[脱敏蜂窝查询](Windows-Cellular-Status.json)。原始设备路径、SIM 标识、完整 MBN 日志、APN 上下文和撤销收据只保留本机工作目录。
 
-### 实际通信与当前失败阶段
+### 历史通信与当时失败阶段
 
 `MI_04` 网卡处于 Disconnected、0 bps、无首选 IPv4/网关。Windows MBN 返回部分能力/SIM/射频信息，但多个 `netsh` 查询返回非零，homeprovider 报 `0xffffffff`、上下文查询部分失败 `0x32`；不把部分输出当成所有接口调用成功。随后使用另经授权的 AT 串口交叉核验：
 
@@ -42,7 +84,7 @@
 
 Windows 驱动自报制造商为 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-00`、固件 `19906.5090.00.02.00.23`；这是设备/驱动提供的身份，不是拆机基带芯片鉴定。它自报 `No voice`；不能凭 AT 或网卡就承诺普通电话，更不能把安装 Windows 驱动等同于 Apple 端可用。
 
-### 下一步与停止边界
+### 当时的下一步与停止边界
 
 当前问题已从“没有任何功能驱动”推进到“可查询，但未入网/附着”。**具体原因仍未定位**：不能据现有读数断言是 SIM、天线、供电、固件限制或某种型号驱动错误，也未排除后续数据传输兼容性问题。优先核验官方飞行套件两路射频连接是否实际接入模块、供电/数据线稳定性、当前位置的电信覆盖，以及模块在原 DJI 使用场景能否用这张 SIM 注册；不自动切频段、强制其他运营商、改 USB 模式或执行“解锁”命令。
 
@@ -61,7 +103,7 @@ Windows 驱动自报制造商为 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-
 
 新增 `scripts/Get-IG831TNetworkReadiness.ps1` 只查目标设备与目标网卡，公开结果仅包含状态/布尔值；地址、GUID、实例后缀留在私有目录。读数被权限阻止时返回 `MetadataUnavailable`，不把失败查询当成“没设备”。它没有联网测试功能，永远不会仅凭有 IP 就报告 Internet 成功。
 
-## 新进展：已取得并审阅官方 Quectel 2.8 包
+## 历史进展：已取得并审阅官方 Quectel 2.8 包
 
 上轮资源页要求登录，没有取得安装包。本轮从公开的 [Quectel 官方 ZIP 地址](https://www.quectel.com/content/uploads/2021/04/Quectel_Windows_USB_DriverQ_NDIS_V2.8_EN.zip) 下载成功，HTTP 200；官网 [产品资源页](https://www.quectel.com/product/lte-a-eg12-series/) 亦列出同名 NDIS 2.8 资源。该资源所在产品页不能用来鉴定 IG831T 芯片。
 
@@ -82,7 +124,7 @@ Windows 驱动自报制造商为 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-
 
 外层 `setup.exe` 没有 Authenticode 签名，因此没有运行它。直接解析 PE 后的 InstallShield ISSetupStream 数据，静态解出 MSI，再以 Windows Installer 数据库只读模式 0 读取表与 CAB 流，按 File/Component/Directory 表还原原始布局。没有运行任何 MSI 安装/自定义动作或厂商 EXE/DLL。只读模式与流读取语义依据 [Microsoft OpenDatabase](https://learn.microsoft.com/en-us/windows/win32/msi/installer-opendatabase)、[MsiRecordReadStream](https://learn.microsoft.com/en-us/windows/win32/api/msiquery/nf-msiquery-msirecordreadstream)；容器格式研究参照 [ISx 原始源码](https://github.com/lifenjoiner/ISx/blob/master/ISx.c)。厂商二进制不提交到 GitHub，保留本机工作目录。
 
-## 为什么尚未安装
+## 当时为什么尚未安装
 
 1. 同一驱动版本变新，并不自动补上 `4009` 支持；这次直接核对 14 个 INF 后仍无匹配，不能将原包普通安装说成解决方案。
 2. DJI 社区存在用户对二代上网的实验记录，但其路径包含改 `qcfilter.inf` 的 PID、选择旧型号驱动等操作。[原始实验贴](https://bbs.dji.com/pro/detail?tid=496055) **这是他人的单次实验，不是 DJI 官方驱动支持声明，也不是本机验证。** 本轮只将其用于定位官方下载地址，没有执行其中修改 INF、切换模式或重启指令。
@@ -91,7 +133,7 @@ Windows 驱动自报制造商为 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-
 
 ## 历史方案：试装前的许可与单接口范围
 
-下列是先前发出的实验条件；上述最新结果说明用户已依次授权且已执行哪些动作，不把此历史段落当成仍未获许可：
+下列是先前发出的实验条件；上述历史安装结果说明用户已依次授权且已执行哪些动作，不把此历史段落当成仍未获许可：
 
 - 可上网 SIM 与两路外接天线就绪；授权少量模块流量测试。USB 通电后的自主射频行为不能由工具保证关闭。
 - 是否同意将已核验的**原始签名 NDIS 网卡驱动**手动选择给目标 `MI_04` 做一次兼容性实验；不把该请求当作用户已经同意。

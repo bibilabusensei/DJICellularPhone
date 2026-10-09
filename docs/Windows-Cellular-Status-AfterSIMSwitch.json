@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUTC": "2026-10-09T04:50:59.1562738Z",
+  "target": "USB\\VID_2CA3&PID_4009",
+  "controlInterface": "02",
+  "port": "COM4",
+  "userReportedSimOperator": "China Telecom",
+  "userReportedSimWorksInPhone": true,
+  "userReportedSimSelectionChanged": true,
+  "physicalSimIndependentlyIdentified": false,
+  "statusQueries": [
+    {
+      "command": "AT",
+      "response": "AT\r\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:57.8224991Z"
+    },
+    {
+      "command": "AT+CPIN?",
+      "response": "AT+CPIN?\r\r\n+CPIN: READY\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.0339454Z"
+    },
+    {
+      "command": "AT+CFUN?",
+      "response": "AT+CFUN?\r\r\n+CFUN: 1,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.1391757Z"
+    },
+    {
+      "command": "AT+CREG?",
+      "response": "AT+CREG?\r\r\n+CREG: 0,0\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.2479968Z"
+    },
+    {
+      "command": "AT+CGREG?",
+      "response": "AT+CGREG?\r\r\n+CGREG: 0,1\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.3569789Z"
+    },
+    {
+      "command": "AT+CEREG?",
+      "response": "AT+CEREG?\r\r\n+CEREG: 0,1\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.4666528Z"
+    },
+    {
+      "command": "AT+CSQ",
+      "response": "AT+CSQ\r\r\n+CSQ: 28,99\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.5766817Z"
+    },
+    {
+      "command": "AT+COPS?",
+      "response": "AT+COPS?\r\r\n+COPS: 0,0,\"CHN-CT\",7\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.6842625Z"
+    },
+    {
+      "command": "AT+CGATT?",
+      "response": "AT+CGATT?\r\r\n+CGATT: 1\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.8290883Z"
+    },
+    {
+      "command": "AT+CGACT?",
+      "response": "AT+CGACT?\r\r\n+CGACT: 1,1\r\n+CGACT: 3,0\r\n+CGACT: 4,0\r\n+CGACT: 5,1\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:58.9379801Z"
+    },
+    {
+      "command": "AT+CESQ",
+      "response": "AT+CESQ\r\r\n+CESQ: 99,99,255,255,4,49\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:59.0476057Z"
+    },
+    {
+      "command": "AT+CEER",
+      "response": "AT+CEER\r\r\n+CEER: No cause information available\r\n\r\nOK\r\n",
+      "collectedAtUTC": "2026-10-09T04:50:59.1562738Z"
+    }
+  ],
+  "homeEpsRegistrationConfirmed": true,
+  "packetAttached": true,
+  "userReportedGreenLightSteady": true,
+  "automaticSelectionRequestRepeated": false,
+  "apnOrUsbModeChanged": false,
+  "dnsOrHttpsTestPerformed": true,
+  "internetVerified": true,
+  "internetEvidence": "Windows-Internet-AfterSIMSwitch.json",
+  "limitations": [
+    "Only allowlisted status responses are published. APN contexts and unique SIM/device identifiers remain private.",
+    "SIM selection and green LED are user reports, not a physical inspection or a unique SIM identity match.",
+    "Home EPS registration and packet attachment do not alone prove Internet. See the separate source/interface-bound DNS and HTTPS record.",
+    "Circuit-switched CREG remains 0,0; this report does not verify voice, bandwidth or Apple device capabilities."
+  ]
+}
