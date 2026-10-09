@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUTC": "2026-10-09T05:23:29.1607781Z",
+  "target": "USB\\VID_2CA3&PID_4009&MI_02",
+  "imsRegistrationReadResult": "ERROR",
+  "imsRegistrationVerified": false,
+  "imsVoiceAvailabilityStored": 1,
+  "imsVoiceAvailabilityReadResult": "OK",
+  "currentCallsReadResult": "OK",
+  "currentCallRecords": [
+    {
+      "index": 1,
+      "direction": 1,
+      "state": 0,
+      "mode": 1,
+      "multiparty": 0
+    },
+    {
+      "index": 2,
+      "direction": 1,
+      "state": 0,
+      "mode": 1,
+      "multiparty": 0
+    }
+  ],
+  "plusCommandTokensReturned": 174,
+  "supportedCommandListIsExhaustiveProof": false,
+  "dialAnswerHangupOrConfigurationCommandSent": false,
+  "realVoiceCallVerified": false,
+  "usbAudioVerified": false,
+  "appleUsbTransportVerified": false,
+  "directUsbRequiredByUser": true,
+  "bridgeAccepted": false,
+  "limitations": [
+    "CAVIMS is a stored IMS voice availability value, not proof of IMS registration or actual calling.",
+    "CLCC mode 1 is data mode. No existing call or data session was modified.",
+    "The returned command list omits a successfully queried CAVIMS; absence in CLAC is not a proof of lack of support.",
+    "Full command lists and raw CLCC responses remain private. No SIM numbers, phone numbers or instance suffixes are published.",
+    "No Apple USB transport, system network integration, call dialing or bidirectional audio was verified."
+  ]
+}

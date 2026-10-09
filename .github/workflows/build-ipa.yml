@@ -4,6 +4,12 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      publish_research_release:
+        description: Publish the offline research IPA only, not a working modem/call version
+        required: false
+        default: false
+        type: boolean
 permissions:
   contents: read
 concurrency:
@@ -81,7 +87,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
   publish-research-ipa:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch' && inputs.publish_research_release
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -22,11 +22,11 @@
 
 ## 构建与下载
 
-在 [GitHub Actions](https://github.com/bibilabusensei/DJICellularPhone/actions/workflows/build-ipa.yml) 打开最新成功的 **Build unsigned IPA**，下载 `DJICellularPhone-unsigned-ipa`。产物包含 IPA、提交/能力清单和 SHA-256；失败构建不会被视为成功产物。main 构建和包核验成功后，另将该产物发布为 [Release](https://github.com/bibilabusensei/DJICellularPhone/releases) 的无签名研究 IPA，方便用户自行合法签名；公开下载不等于已完成真机安装或业务测试。
+在 [GitHub Actions](https://github.com/bibilabusensei/DJICellularPhone/actions/workflows/build-ipa.yml) 打开最新成功的 **Build unsigned IPA**，下载 `DJICellularPhone-unsigned-ipa`。产物包含 IPA、提交/能力清单和 SHA-256；失败构建不会被视为成功产物。已发布的 [研究版 IPA](https://github.com/bibilabusensei/DJICellularPhone/releases/tag/ios-research-5) 仅用于自行合法签名后的界面检查，不能通过模块通话或上网。按用户最新“真实功能做好再发”的要求，后续不自动发布研究 IPA；只有手动运行工作流并明确勾选 `publish_research_release` 才发布这一离线研究产物。
 
 工作流使用 XcodeGen，构建 iPhone/iPad 通用 arm64 应用与 iOS Simulator 应用，并检查包内 plist、设备家族、架构和历史快照。Windows 本机没有 Xcode，不能在这里完成 SwiftUI/iOS 编译；以对应提交的 Actions 结果为准。
 
-无签名 IPA 必须另行使用有效证书和 provisioning profile 签名才能安装。重新签名也不会自动获得 DriverKit 或受限网络 entitlement。仓库不提供证书、账号凭据或绕过系统安全的功能。
+无签名 IPA 必须另行使用有效证书和 provisioning profile 签名才能安装。重新签名也不会自动获得 DriverKit 或受限网络 entitlement。用户当前只有免费 Apple 账号，不能满足拟用的 iPad DriverKit 开发权限；这不等于所有标准 USB 网络路线都被排除，但该模块的标准模式尚未验证。仓库不提供证书、账号凭据或绕过系统安全的功能。
 
 Mac 上可执行：
 
@@ -116,4 +116,4 @@ Windows 网卡就绪检查（不安装驱动、不发送流量；需要允许访
 - Apple 当前文档将 NetworkingDriverKit 列为 macOS 可用；USBDriverKit 与 VPN 都不是自动获得 iPad 系统蜂窝接入的捷径。
 - DJI 手册指定 Windows 电脑与兼容 DJI 设备，未列出 Apple 设备。硬件供电及兼容性验证前，不建议直接插到 iPhone/iPad 尝试。
 
-Windows 单次上网目标已实测通过，不在这台已工作的电脑重复安装驱动。当前先分享 Windows 兼容安装工具；用户目前只有 Windows，并要求 GitHub 编译/发布 IPA 供自行签名。因此同步提供无签名研究 App，但 Apple 实时 USB 驱动/系统网络阶段仍未成立。后续再研究合法 USB 访问与网络集成路线；任何扩大驱动安装范围、改变模块配置、漫游数据或语音测试都需要单独授权。
+Windows 单次上网目标已实测通过，且 Windows 兼容安装工具已发布；不在这台已工作的电脑重复安装驱动。用户要求 Apple 端必须模块直插、不接受 Windows/网络桥接，并要求真实通信/通话成立后再发布功能版；现有研究 App 不是该成品。2026-10-09 后续语音状态查询有 `CAVIMS: 1`，但 IMS 注册未能核实，当前 CLCC 两条均为数据模式，USB 音频/Apple 通信仍未知。见 [直插阶段证据与门槛](docs/Direct-USB-Voice-Feasibility.md)。任何扩大驱动安装范围、改变模块配置、漫游数据或实际呼叫测试都需要单独授权。

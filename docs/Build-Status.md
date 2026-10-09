@@ -55,3 +55,17 @@
 - 实际能力仍是只读研究工具；未进行真机安装、USB 数据传输、电话、联网或模拟器 UI 运行测试。
 
 追加此最终结果的提交仅修改本文件，使用 `[skip ci]` 避免为文档重复构建。可安装能力与编译证据都必须引用上面的代码提交和对应 artifact，而不是把文档提交当作新 App 构建。
+
+## 2026-10-09：Windows 安装工具与研究 IPA 已发布并下载核验
+
+发布代码提交：`fde639257f3ffd7017a545cee1c3b532be4fd761`。本次未添加真实 Apple USB、电话或数据后端；安装工具与离线 IPA 必须区分。
+
+- [Windows Actions run 37887782859](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/37887782859)：`completed / success`，工具验证、公开包打包和 Release 上传成功。
+- [Windows 实验版 Release](https://github.com/bibilabusensei/DJICellularPhone/releases/tag/windows-installer-v0.1.0)：ZIP 30,970 字节，SHA-256 `5c07ce2df69e56cc4ee53f2f07f723be26756b181983f8c6443f99ed043837a7`。公开 ZIP 不内置厂商驱动二进制，使用者本机从固定官网来源取包、静态提取原始签名驱动。整合安装脚本未作另一台缺驱动电脑的实装验证，保持实验版标记。
+- [IPA Actions run 37887782912](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/37887782912)：`completed / success`，通用设备和模拟器编译、IPA 核验、产物及 Release 上传成功。
+- [既有研究 IPA Release](https://github.com/bibilabusensei/DJICellularPhone/releases/tag/ios-research-5)：IPA 80,465 字节，SHA-256 `9c64dafc89f0b5fbcf5006ec326a465bb3599dc1176cc807a7a8132e8e1a92e9`；版本 `0.2.0`、build `3`、arm64、设备家族 `[1,2]`、最低系统 17.0，无嵌入 profile。
+- 五个已发布附件已实际下载并复核 GitHub digest、对应 SHA256SUMS 和清单；不只依据上传步骤的绿色状态。研究 IPA 的实时 USB、模块电话与模块 Internet 三项仍为 `false`，没有真机功能验证。
+
+研究 Release 在用户进一步要求“可以通话、可以通信再发”之前按先前请求发布。后续更改将研究 IPA 的 Release 发布限制为 `workflow_dispatch` 且显式启用 `publish_research_release`，默认为 `false`；普通 main 提交仍可编译并生成 Actions artifact，但不再自动发布离线研究版。没有发布“真实直插通信完成版”。
+
+用户仅有免费 Apple 账号，并拒绝桥接。当前 DriverKit 开发签名路线不满足，标准 USB 网络模式、语音/音频也未验证；构建成功不改变这些事实。见 [最新直插可行性](Direct-USB-Voice-Feasibility.md)。

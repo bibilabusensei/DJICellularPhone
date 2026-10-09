@@ -6,7 +6,7 @@
 
 原始签名 Quectel 2.8 驱动分别被手动选择给 `MI_04` 与 `MI_02`，两者 Code 0，网卡及 `COM4` 可见；父 `usbccgp` 与其他接口绑定未改。10 月 8 日一次经授权的自动选网后仍未注册/附着；保留该失败证据。10 月 9 日用户报告切换 SIM 并重新插接，AT 确认中国电信本地 LTE 注册、分组附着和活跃承载。随后将 DNS 与 TLS socket 绑定目标源地址/出接口，核对路由、身份和计数增量，HTTPS 返回 200，**本机单次数据上网验证成立**。不证明所有应用默认使用模块或长期稳定，不是 iPhone/iPad 的通信实现。见 [Windows 报告](Windows-PC-Internet.md) 与 [流量实测](Windows-Internet-AfterSIMSwitch.json)。
 
-Windows 驱动自报制造商 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-00`；这是固件/驱动返回的身份，**不是芯片鉴定**。移动宽带能力自报 `No voice`，且当前 USB 配置未见标准音频类，因此电话目标面临新增不利证据；这仍不是对所有固件/硬件语音能力的最终证明，不能靠 CallKit 补齐。
+Windows 驱动自报制造商 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-00`；这是固件/驱动返回的身份，**不是芯片鉴定**。移动宽带能力自报 `No voice`，且当前 USB 配置未见标准音频类；后续只读查询又得到 `CAVIMS: 1` 的存储 IMS 语音可用标志。两者不能单独证明所有语音能力存在或不存在；IMS 注册、真正呼叫和双向音频仍未验证，不能靠 CallKit 补齐。`CLCC` 的两条记录均为数据模式，未对其挂断。见 [直插与语音新证据](Direct-USB-Voice-Feasibility.md) 与 [脱敏查询](Windows-Voice-Capability-Queries.json)。
 
 ## 结论矩阵
 
@@ -15,7 +15,7 @@ Windows 驱动自报制造商 `Fibocom Wireless Inc.`、型号 `NL668T-GL-00-00`
 | Windows USB/控制接口 | `2CA3:4009`，五个 FF 接口；MI_04 网卡、MI_02 AT 串口授权试装后 Code 0；原包只匹配 `4006` | 重插恢复、持续稳定性及其他机型/配置兼容性 | 控制查询及模块路径上的单次 DNS/HTTPS 已通过 |
 | iPhone 15 Pro 直接 USB 控制 | USB-C 存在，但未证明有 App 可用的合规通道 | 系统支持的设备类别或官方认可的配件通信方式 | 当前没有已验证公开直接驱动路线 |
 | iPad Air 5 USB 控制 | M1 属于支持 DriverKit 的 M 系列 | USB 协议、匹配驱动、签名、entitlement、用户启用驱动 | 有条件研究，不保证 Apple 授权或协议可用 |
-| 外置 SIM 普通电话 | 控制、IMS/VoLTE、音频均未知 | 模块/运营商语音能力、SIM 语音业务、可控呼叫与双向音频 | 当前不可用；CallKit 不能补齐 |
+| 外置 SIM 普通电话 | `CAVIMS: 1` 为存储可用标志；IMS 注册、呼叫和音频未验证 | 模块/运营商语音能力、SIM 语音业务、可控呼叫与双向音频 | 当前不可用；CallKit 不能补齐 |
 | 模块数据上网 | 本机 Windows 已本地 LTE 注册、有地址，限定接口的 DNS/HTTPS 成功；Apple 端未实现网络集成 | Apple USB 访问、数据协议、网络集成及平台许可；持续供电/稳定性 | Windows 单次可用；不能承诺 Apple 系统级蜂窝接入 |
 
 ## iPhone：USB-C 不等于任意 USB API
@@ -39,7 +39,7 @@ Apple 文档要求 iPadOS 16+ 与 M 系列芯片，并说明 USBDriverKit、PCID
 - iPad App 与驱动通信的 `com.apple.developer.driverkit.communicates-with-drivers`；如开放给第三方 App，另涉及相应 user client 权限。
 - 有效证书、App ID 与包含权限的 provisioning profile，以及用户在 iPad 设置中启用驱动。开发与发行签名/权限流程须分别核对，不能仅在 plist 写几个键就取得能力。[Apple：申请 DriverKit 权限](https://developer.apple.com/documentation/driverkit/requesting-entitlements-for-driverkit-development)、[开发 provisioning profile](https://developer.apple.com/help/account/provisioning-profiles/create-a-driverkit-development-provisioning-profile)
 
-Apple 可能要求硬件 vendor ID、设备/应用用途等资料；是否批准针对 DJI 设备的权限未知。未取得权限或未懂协议前，不添加声称可工作的驱动扩展，本轮也未请求或绕过这些权限。
+Apple DTS 说明付费账号可使用开发版 DriverKit 权限，USB/PCI 发行权限则需分别核对批准。用户已确认只有免费 Apple 账号，目前不满足这条驱动开发签名路线；不能靠普通 IPA 重签获得权限。[Apple DTS：DEXT 签名](https://developer.apple.com/forums/thread/809202)。发行批准可能要求 vendor ID、设备/应用用途等资料，针对 DJI 设备的批准未知。未取得权限或未懂协议前，不添加声称可工作的驱动扩展，本轮也未请求或绕过这些权限。
 
 **系统网络是另一个门槛。** Apple 当前 NetworkingDriverKit 文档明确标为 macOS 可用，且面向以太网驱动；不能把“iPad 有 USBDriverKit”解释成“可把任意 USB 模块注册成 iPad 系统网卡”。[Apple：NetworkingDriverKit](https://developer.apple.com/documentation/networkingdriverkit)
 
@@ -72,5 +72,5 @@ DJI 官方手册说明该模块用于移动数据、采用双 TS-5 天线接口�
 2. **研究进展：** 已取得完整设备/配置描述符，审阅电脑内驱动，确认 `4006` 包不匹配 `4009`，并写出未签名、未安装的单接口 WinUSB 绑定草案。详见 [Windows 驱动核查](Windows-Driver-Audit.md)。官方协议/匹配签名包仍未获得，不把通用 USB 绑定当作调制解调器实现。
 3. **Windows 首阶段已通过：** 原始签名驱动的授权手动选择使网卡/AT 串口启动；用户报告换卡后，已完成模块路径的 DNS/HTTPS 实测。不再为这个已成功的测试重复装驱动；稳定性、默认应用路由仍未验证。不擅自扩大接口安装、改模块配置或漫游连接；不得禁用签名、改 INF 或使用来源不明驱动。
 4. **iPad 分支（尚未实现）：** 核对 Apple 权限与可用数据/音频协议，再设计最小、特定 VID/PID/接口的 DriverKit 扩展。权限/协议未成立不承诺可安装驱动；Windows 成功不改变这一限制。
-5. **iPhone 分支：** 如无公开合规直连方式，评估系统支持的标准网络配件或另设备网关；明确这改变硬件拓扑，而非原来的模块直插实现。
+5. **iPhone 分支：** 用户已明确拒绝电脑/局域网/网关桥接，只研究模块自身的合规直插路线。系统支持的标准 USB 网络是候选方向，但 IG831T 当前未验证具备该模式；找不到协议与安全恢复方法，不猜写模式命令。详情见 [直插与语音可行性](Direct-USB-Voice-Feasibility.md)。
 6. **最后才做业务：** 在独立数据、语音和音频证据成立后，分别实现网络集成和 CallKit。所有设备写操作、SIM 查询、拨号、收费业务和固件操作均需另行授权；固件/IMEI 修改不属于此计划。
