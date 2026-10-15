@@ -3,6 +3,7 @@ import UIKit
 
 private enum WorkspaceSection: String, CaseIterable, Identifiable {
     case overview = "状态"
+    case wired = "直插检测"
     case usb = "USB 记录"
     case voice = "电话"
     case limits = "可行性"
@@ -12,6 +13,7 @@ private enum WorkspaceSection: String, CaseIterable, Identifiable {
     var symbol: String {
         switch self {
         case .overview: return "gauge.with.dots.needle.0percent"
+        case .wired: return "network"
         case .usb: return "cable.connector"
         case .voice: return "phone"
         case .limits: return "info.circle"
@@ -72,6 +74,7 @@ struct ContentView: View {
     private func page(for section: WorkspaceSection) -> some View {
         switch section {
         case .overview: overviewPage
+        case .wired: WiredDiagnosticsView()
         case .usb: usbPage
         case .voice: voicePage
         case .limits: limitsPage
@@ -80,9 +83,9 @@ struct ContentView: View {
 
     private var researchNotice: some View {
         Section {
-            Label("研究版 · 无实时 USB 通信", systemImage: "exclamationmark.triangle")
+            Label("研究版 · 无厂商 USB 驱动", systemImage: "exclamationmark.triangle")
                 .foregroundStyle(.orange)
-            Text("不会拨打电话或提供模块上网。Windows 记录是离线历史证据，不代表模块现在连接到了本机。")
+            Text("不会拨打电话或自动提供模块上网。新增系统有线检测不等于识别大疆模块；Windows 记录仍为离线历史证据。")
                 .font(.footnote)
         }
     }
@@ -98,6 +101,9 @@ struct ContentView: View {
             }
             Section("本机限制") {
                 Text(diagnostics.platformAssessment)
+            }
+            Section("新增：真实系统网络检测") {
+                Text("打开“直插检测”读取本机有线网络；经你确认后，可仅通过选定有线接口尝试少量 HTTPS。不会读取 USB 厂商接口，也不会把 Wi-Fi 成功当成模块上网。")
             }
             Section("最近 Windows 记录（非实时）") {
                 if let report {
@@ -192,7 +198,7 @@ struct ContentView: View {
                 Text("USB-C 可连接系统支持的配件，但普通 App 不能因此获得任意 USB 厂商接口或调制解调器访问权。")
             }
             Section("iPad Air 5（M1）") {
-                Text("硬件符合 M 系列 DriverKit 前提。仍需专用 USB 驱动、有效签名及 Apple 相应 entitlement；无签名 IPA 不能授予这些权限。")
+                Text("自定义厂商 USB 驱动需要有效 DriverKit 签名及相应权限，免费账号不满足本研究路线。若系统本身识别标准有线网络，则可走普通网络 API；本模块是否成立仍未知。")
                 Text("Apple 当前文档将 NetworkingDriverKit 标为 macOS 可用。iPad 支持 USBDriverKit 不等于可创建系统蜂窝网卡。")
             }
             Section("上网与通话") {

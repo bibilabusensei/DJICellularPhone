@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       publish_research_release:
-        description: Publish the offline research IPA only, not a working modem/call version
+        description: Publish the diagnostic research IPA only, not a working modem/call version
         required: false
         default: false
         type: boolean
@@ -33,8 +33,8 @@ jobs:
           python3 --version
       - name: Install XcodeGen
         run: brew install xcodegen
-      - name: Validate sanitized hardware snapshot
-        run: python3 scripts/verify-ipa.py --snapshot Resources/IG831T-USB-Snapshot.json
+      - name: Validate sanitized hardware snapshot and capability contract
+        run: python3 scripts/verify-ipa.py --snapshot Resources/IG831T-USB-Snapshot.json --capabilities Resources/Research-Capabilities.json
       - name: Generate project
         run: xcodegen generate
       - name: Build universal iPhone and iPad device app
@@ -67,7 +67,8 @@ jobs:
             echo '### Unsigned research build'
             echo "Commit: $GITHUB_SHA"
             echo 'Device arm64 and iOS Simulator builds completed. IPA includes iPhone/iPad device families and sanitized historical evidence.'
-            echo 'Requires separate signing/provisioning. No real USB transport, cellular call, cellular Internet, or DriverKit entitlement is provided.'
+            echo 'Includes system wired-network monitoring and a consent-gated wired HTTPS diagnostic, not a vendor USB driver or identified SIM data path.'
+            echo 'Requires separate signing/provisioning. No real USB transport, cellular call, cellular Internet, Apple hardware validation or DriverKit entitlement is provided.'
           } >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         with:
@@ -112,4 +113,4 @@ jobs:
             DJICellularPhone-unsigned.ipa build-manifest.json SHA256SUMS.txt \
             --target "$GITHUB_SHA" --prerelease \
             --title "iPhone/iPad unsigned research IPA - build ${GITHUB_RUN_NUMBER}" \
-            --notes 'Unsigned iPhone/iPad research UI only. Requires your own valid signing and provisioning. No live USB modem transport, external SIM Internet, cellular calls or DriverKit entitlement. Re-signing does not grant those capabilities. See build-manifest.json and SHA256SUMS.txt for the exact commit and package.'
+            --notes 'Unsigned iPhone/iPad diagnostic research build, not a working modem product. Includes system wired-network monitoring and a manual interface-constrained HTTPS probe. Apple hardware and IG831T identification/SIM data path are unverified. Requires valid signing/provisioning. No raw USB modem transport, cellular calls or DriverKit entitlement. See build-manifest.json and SHA256SUMS.txt for the exact commit and capabilities.'

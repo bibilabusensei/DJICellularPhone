@@ -37,6 +37,27 @@ def validate_snapshot(content):
     return report
 
 
+def validate_capabilities(content):
+    report = json.loads(content)
+    expected = {
+        "systemWiredNetworkMonitoringImplemented": True,
+        "manualWiredHTTPSProbeImplemented": True,
+        "appleDeviceTestingCompleted": False,
+        "automaticTestTrafficEnabled": False,
+        "diagnosticTrafficRequiresConsent": True,
+        "usbVendorIdentificationImplemented": False,
+        "realUSBTransportImplemented": False,
+        "realCellularCallsImplemented": False,
+        "realCellularInternetImplemented": False,
+    }
+    require(isinstance(report, dict), "Invalid capability contract")
+    require(type(report.get("schemaVersion")) is int and report["schemaVersion"] == 1, "Unsupported capability schema")
+    require(set(report) == {"schemaVersion", *expected}, "Unexpected capability fields")
+    for field, value in expected.items():
+        require(report.get(field) is value, f"Unsupported capability claim: {field}")
+    return report
+
+
 def validate_ipa(ipa_path, commit):
     bundle_path = "Payload/DJICellularPhone.app/"
     with zipfile.ZipFile(ipa_path) as archive:
@@ -56,6 +77,7 @@ def validate_ipa(ipa_path, commit):
         require(struct.unpack_from("<I", executable, 4)[0] == 0x0100000C, "Device executable must be arm64")
         require(bundle_path + "embedded.mobileprovision" not in archive.namelist(), "Unexpected provisioning profile")
         report = validate_snapshot(archive.read(bundle_path + "IG831T-USB-Snapshot.json"))
+        capabilities = validate_capabilities(archive.read(bundle_path + "Research-Capabilities.json"))
     digest = hashlib.sha256(ipa_path.read_bytes()).hexdigest()
     return {
         "commit": commit,
@@ -72,9 +94,10 @@ def validate_ipa(ipa_path, commit):
         "installation": "Separate valid signing/provisioning is required; no DriverKit entitlement is granted by this IPA.",
         "hardwareSnapshotCapturedAt": report["capturedAt"],
         "hardwareSnapshotIsLive": False,
-        "realUSBTransportImplemented": False,
-        "realCellularCallsImplemented": False,
-        "realCellularInternetImplemented": False,
+        "realUSBTransportImplemented": capabilities["realUSBTransportImplemented"],
+        "realCellularCallsImplemented": capabilities["realCellularCallsImplemented"],
+        "realCellularInternetImplemented": capabilities["realCellularInternetImplemented"],
+        "researchCapabilities": capabilities,
     }
 
 
@@ -82,6 +105,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("ipa", type=Path, nargs="?")
     parser.add_argument("--snapshot", type=Path)
+    parser.add_argument("--capabilities", type=Path)
     parser.add_argument("--commit", default="unknown")
     parser.add_argument("--manifest", type=Path)
     arguments = parser.parse_args()
@@ -94,8 +118,11 @@ def main():
             arguments.manifest.parent.mkdir(parents=True, exist_ok=True)
             arguments.manifest.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(json.dumps(manifest, ensure_ascii=False, indent=2))
-    if not arguments.snapshot and not arguments.ipa:
-        parser.error("Provide --snapshot or an IPA path")
+    if arguments.capabilities:
+        validate_capabilities(arguments.capabilities.read_bytes())
+        print("Capability contract validated: wired diagnostics only; Apple hardware, external SIM data and calls unverified.")
+    if not arguments.snapshot and not arguments.capabilities and not arguments.ipa:
+        parser.error("Provide --snapshot, --capabilities or an IPA path")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "systemWiredNetworkMonitoringImplemented": true,
+  "manualWiredHTTPSProbeImplemented": true,
+  "appleDeviceTestingCompleted": false,
+  "automaticTestTrafficEnabled": false,
+  "diagnosticTrafficRequiresConsent": true,
+  "usbVendorIdentificationImplemented": false,
+  "realUSBTransportImplemented": false,
+  "realCellularCallsImplemented": false,
+  "realCellularInternetImplemented": false
+}

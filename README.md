@@ -110,6 +110,10 @@ Windows 网卡就绪检查（不安装驱动、不发送流量；需要允许访
 
 ## 关键边界
 
+### 2026-10-15：新增 Apple 真机有线检测候选
+
+`0.3.0` / build `4` 新增“直插检测”：真实读取系统有线网络，经用户确认后只通过选定有线接口尝试少量 HTTPS，不回退 Wi-Fi/本机蜂窝，不改模块或电脑配置。它不是 DJI USB 驱动，不能凭有线响应证明外置 SIM 上网；真实模块传输、电话、模块 Internet 和 Apple 真机验证仍为未实现/未验证。仅生成 Actions 候选 artifact，不自动发布功能版。供电安全与真机使用步骤、DNS/VPN/身份边界详见 [直插检测说明](docs/Apple-Wired-Diagnostics.md)。
+
 - CallKit 是通话集成/UI，不是蜂窝驱动或外置 SIM 拨号实现。
 - iPhone 的 USB-C 接口不等于第三方 App 能访问任意 USB 厂商接口。
 - iPad Air 5 的 M1 满足 DriverKit 硬件条件，但还需要协议、驱动及有效 entitlement/签名；不代表具备系统网卡能力。

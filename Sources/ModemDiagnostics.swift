@@ -10,7 +10,7 @@ struct ReadOnlyModemDiagnostics: ModemDiagnostics {
 
     var platformAssessment: String {
         if isIPad {
-            return "仅 M 系列 iPad 支持 DriverKit；仍需 USB 驱动、相应签名权限与设备协议。本 App 未内置驱动。"
+            return "厂商 USB 接口可研究 M 系列 iPad 的 DriverKit，但仍需协议与签名权限；本 App 未内置驱动。标准系统有线网络是另一条候选路线。"
         }
         return "iPhone 没有公开的通用 USB 调制解调器驱动接口；USB-C 不代表能访问任意串口或厂商接口。"
     }
@@ -25,7 +25,8 @@ struct ReadOnlyModemDiagnostics: ModemDiagnostics {
             "实时 USB：未实现；SIM 状态：未知。",
             "模块蜂窝数据：未实现；普通电话：不可用。",
             platformAssessment,
-            "未打开设备或串口，未发 AT 指令，未建立蜂窝连接。"
+            "未打开设备或串口，未发 AT 指令，未建立蜂窝连接。",
+            "本按钮仍是离线能力检查；实际系统有线网络请打开“直插检测”。"
         ]
         if let report {
             messages.append("Windows 历史记录：\(report.usbIdentifier)，\(report.interfaces.count) 个接口；\(report.serialSummary)。")
