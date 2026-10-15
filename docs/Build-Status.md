@@ -69,3 +69,16 @@
 研究 Release 在用户进一步要求“可以通话、可以通信再发”之前按先前请求发布。后续更改将研究 IPA 的 Release 发布限制为 `workflow_dispatch` 且显式启用 `publish_research_release`，默认为 `false`；普通 main 提交仍可编译并生成 Actions artifact，但不再自动发布离线研究版。没有发布“真实直插通信完成版”。
 
 用户仅有免费 Apple 账号，并拒绝桥接。当前 DriverKit 开发签名路线不满足，标准 USB 网络模式、语音/音频也未验证；构建成功不改变这些事实。见 [最新直插可行性](Direct-USB-Voice-Feasibility.md)。
+
+## 2026-10-15：build 4 真实系统有线诊断候选，编译成功
+
+- 代码提交：`02426ec67dbe95804f14fe610ca3149ff200a6ed`，版本 `0.3.0`、build `4`；新增系统有线网络监测和用户确认后的指定接口 HTTPS 探测，不是 IG831T USB 驱动或已验证的外置 SIM 数据路径。
+- [Actions run 38687482437](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/38687482437)：`completed / success`。job `116265548518` 的设备 Release、模拟器 Debug、能力清单/历史快照验证、IPA 包核验与上传全部成功；日志两次 `BUILD SUCCEEDED`。
+- 实际工具链是 Xcode 16.4（16F6），不是 Xcode 27 或 iOS 27 SDK。用户报告 iOS 27，但没有进行其设备上的签名安装或运行验证；模拟器也仅编译，未启动或执行 UI/网络测试。
+- [候选 unsigned IPA artifact](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/38687482437/artifacts/11950668185)：ID `11950668185`，外层 Actions ZIP 157,576 字节，查询时未过期，保存至 2026-11-14 13:35:13（香港）。外层 digest 为 `5495b64b44458ff3a8e04e20e5848cb7d56d531c705fda99676f230983d99ec3`。
+- Actions 实际生成并核验的包内 IPA SHA-256：`f7d85e5d6777728bb782d568c4f0d406e6acebb4a09064fec7d8ff0a300c0db4`。该哈希读取自对应 job 的实际清单输出，不是本地重新下载校验；不要将外层 artifact 大小/digest 当成 IPA 本体大小/哈希。
+- [构建日志 artifact](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/38687482437/artifacts/11950823116) 保存两份编译日志；仍只有未使用 AppIntents 导致的 metadata skipped 警告，没有因此引入无关框架。
+- 实际清单新增 `systemWiredNetworkMonitoringImplemented: true`、`manualWiredHTTPSProbeImplemented: true`；`automaticTestTrafficEnabled: false`、`diagnosticTrafficRequiresConsent: true`。USB 厂商识别、真实 USB transport、外置 SIM Internet、普通电话及 Apple 真机验收仍全部 `false`。
+- `publish-research-ipa` job 为 `skipped`，没有发布新的研究 Release 或功能成品。此次仅生成候选 artifact，保持用户要求的功能发布门槛。
+
+Windows 本地另通过 JSON 能力合同正向/拒绝夸大能力及非布尔值的检查、Python 语法和变更格式检查；没有测试工程，不把这些检查称为 Apple 真机测试。使用步骤、供电/模块身份、DNS/系统 VPN 和请求边界见 [Apple 有线检测说明](Apple-Wired-Diagnostics.md)。接下来需要真机结果，而不是再次用 Windows 网络成功代替 Apple 验证。

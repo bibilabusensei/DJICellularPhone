@@ -40,3 +40,7 @@
 - 包内 `Research-Capabilities.json` 与 IPA 核验脚本分开记录“检测代码已实现”和“真机/模块能力未验证”。缺少或夸大该清单会导致包校验失败。
 - Windows 本地可验证 JSON、能力边界、Python 语法及变更格式，不能编译 Apple SDK。设备与模拟器编译、IPA 打包必须以对应新提交的 Actions 实际结果为准；不能沿用 build 3 的绿色状态。
 - 本轮没有 Apple 真机、iOS 27 SDK 编译证明、USB 业务传输、外置 SIM 网络或电话实测。编译结果后续记录于 [Build-Status](Build-Status.md)。
+
+### 候选构建现已通过
+
+代码提交 `02426ec67dbe95804f14fe610ca3149ff200a6ed` 已通过 [设备/模拟器编译与 IPA 核验](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/38687482437)。[候选 IPA artifact](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/38687482437/artifacts/11950668185) 仅供另行签名后诊断，不是新的功能 Release。实际工具链为 Xcode 16.4；没有声称已用 iOS 27 SDK 或用户真机验收。确切哈希与保留时间已记入 [构建记录](Build-Status.md)。
