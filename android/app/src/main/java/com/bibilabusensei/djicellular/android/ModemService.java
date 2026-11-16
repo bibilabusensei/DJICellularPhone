@@ -109,9 +109,16 @@ public final class ModemService extends Service {
                     if (current == null || current.getDeviceId() != device.getDeviceId()) {
                         throw new IllegalStateException("设备已改变，请重新授权。");
                     }
+                    if (expectedGeneration != generation) throw new IllegalStateException("连接已取消。");
                     AtClient opened = new AtClient(new UsbBulkTransport(manager, current));
-                    client = opened;
-                    deviceName = current.getDeviceName();
+                    synchronized (ModemService.this) {
+                        if (expectedGeneration != generation) {
+                            opened.close();
+                            throw new IllegalStateException("连接已取消。");
+                        }
+                        client = opened;
+                        deviceName = current.getDeviceName();
+                    }
                     opened.query("AT");
                     boolean mode30 = false;
                     for (String line : opened.query("AT+GTUSBMODE?")) mode30 |= line.matches("\\+GTUSBMODE:\\s*30");
@@ -255,11 +262,14 @@ public final class ModemService extends Service {
             current.add(pdu);
             newMessage |= !seenMessages.contains(pdu);
         }
-        seenMessages.retainAll(current);
-        seenMessages.addAll(current);
-        messages = display.length() == 0 ? "模块当前存储未返回短信；未切存储区，不代表收信能力已验证。" : display.toString();
-        if (newMessage && polling) notifyEvent("模块存储出现新短信；内容只在应用内显示。");
-        event = "已读取模块当前存储；未删除短信，读取可能将未读记录标为已读。";
+        synchronized (this) {
+            if (client != selected || !ready) return;
+            seenMessages.retainAll(current);
+            seenMessages.addAll(current);
+            messages = display.length() == 0 ? "模块当前存储未返回短信；未切存储区，不代表收信能力已验证。" : display.toString();
+            if (newMessage && polling) notifyEvent("模块存储出现新短信；内容只在应用内显示。");
+            event = "已读取模块当前存储；未删除短信，读取可能将未读记录标为已读。";
+        }
     }
 
     private Notification notification(String text) {
@@ -296,7 +306,7 @@ public final class ModemService extends Service {
 
     private void releaseWakeLock() { if (wakeLock != null && wakeLock.isHeld()) wakeLock.release(); }
 
-    private void closeClient() {
+    private synchronized void closeClient() {
         ready = false;
         homeRegistrationAt = 0;
         polling = false;
@@ -307,7 +317,7 @@ public final class ModemService extends Service {
         deviceName = null;
     }
 
-    public void disconnect() {
+    public synchronized void disconnect() {
         generation++;
         closeClient();
         messages = "会话关闭，短信显示已清除。";

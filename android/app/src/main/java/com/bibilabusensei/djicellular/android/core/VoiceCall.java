@@ -9,7 +9,7 @@ public final class VoiceCall {
     public final int index;
     public final int state;
     public final int mode;
-    private static final Pattern RECORD = Pattern.compile("^\\+CLCC:\\s*(\\d+),\\s*[01],\\s*([0-6]),\\s*(\\d+),.*$");
+    private static final Pattern RECORD = Pattern.compile("^\\+CLCC:\\s*(\\d{1,3}),\\s*[01],\\s*([0-6]),\\s*(\\d{1,2}),.*$");
 
     private VoiceCall(int index, int state, int mode) {
         this.index = index;
