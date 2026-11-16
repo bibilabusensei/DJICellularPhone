@@ -133,7 +133,7 @@ public final class AtClient implements AutoCloseable {
             throw new IOException("未确认专用挂断命令，禁止开始呼叫实验。");
         }
         if (action.equals("dial")) {
-            if (number == null || !number.matches("\\+?[0-9]{3,20}")) throw new IllegalArgumentException("号码格式无效");
+            if (number == null || !number.matches("\\+?[0-9]{7,20}")) throw new IllegalArgumentException("实验拨号仅接受 7–20 位普通号码，不接受紧急或短服务号码。");
             if (Arrays.asList("110", "112", "119", "120", "122", "911", "999", "000").contains(number)) {
                 throw new IllegalArgumentException("实验版不能用于紧急呼叫。");
             }
