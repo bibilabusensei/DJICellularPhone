@@ -44,3 +44,5 @@
 - [识别修复与测试范围](https://github.com/bibilabusensei/DJICellularPhone/blob/main/docs/Android-USB-Recognition-Fix.md)
 
 同页附 `build-manifest.json`、`SHA256SUMS.txt`。这份 Release 转存上述已通过检查的 CI APK，不再重编译或更换其测试签名；与 0.1.0 的签名是否相同是另一回事。
+
+Release 标签指向发布流程提交，实际 APK 编译源码仍以上述 `ef94d3d…` 和清单为准。发布前会核对该源码到发布提交之间 `android/` 目录没有变化，再使用当前 main 的发布提交建标签；不申请额外 workflows 写权限，不修改原 APK 或编译记录。

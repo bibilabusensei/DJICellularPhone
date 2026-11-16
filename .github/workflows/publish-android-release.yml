@@ -42,6 +42,17 @@ jobs:
           assert run['event'] == 'push' and run['head_branch'] == 'main'
           assert run['repository']['full_name'] == os.environ['GH_REPO']
           PY
+          gh api "repos/$GH_REPO/compare/$SOURCE_SHA...$GITHUB_SHA" > source-compare.json
+          python3 - <<'PY'
+          import json, os
+          comparison = json.load(open('source-compare.json'))
+          assert comparison['status'] in ('ahead', 'identical')
+          assert comparison['base_commit']['sha'] == os.environ['SOURCE_SHA']
+          files = comparison.get('files', [])
+          assert len(files) < 300
+          assert not any(item['filename'].startswith('android/') or item.get('previous_filename', '').startswith('android/') for item in files)
+          PY
+          test "$(gh api "repos/$GH_REPO/git/ref/heads/main" --jq .object.sha)" = "$GITHUB_SHA"
           if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
             echo 'Release already exists; refusing to replace its APK or signing identity.' >&2
             exit 1
@@ -79,7 +90,7 @@ jobs:
             dist/android-release/DJICellularAndroid-debug.apk \
             dist/android-release/build-manifest.json \
             dist/android-release/SHA256SUMS.txt \
-            --target "$SOURCE_SHA" --draft --prerelease --latest=false \
+            --target "$GITHUB_SHA" --draft --prerelease --latest=false \
             --title 'Android v0.1.1 USB 识别与状态修复（实验版）' \
             --notes-file docs/Android-Release-v0.1.1.md
           gh release view "$RELEASE_TAG" --json assets,isDraft > release-draft.json
