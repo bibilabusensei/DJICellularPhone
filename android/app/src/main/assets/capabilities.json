@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "minimumAndroidApi": 21,
+  "targetAndroidApi": 35,
+  "usbAtTransportImplemented": true,
+  "smsPduSendReceiveImplemented": true,
+  "experimentalCallControlImplemented": true,
+  "backgroundPollingRequiresUserOptIn": true,
+  "nativeEthernetProbeImplemented": true,
+  "twoWayCallAudioImplemented": false,
+  "userspaceModemDataDriverImplemented": false,
+  "systemCellularNetworkIntegrationImplemented": false,
+  "androidHardwareValidated": false,
+  "android5RuntimeValidated": false,
+  "android11RuntimeValidated": false,
+  "firmwareOrUsbModeChangesImplemented": false
+}

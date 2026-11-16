@@ -1,0 +1,69 @@
+name: Build Android compatibility APK
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - '.github/workflows/build-android.yml'
+  pull_request:
+    paths:
+      - 'android/**'
+      - '.github/workflows/build-android.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: '8.9'
+      - name: Install pinned Android platform
+        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+      - name: Build and lint Android 5+ debug candidate
+        run: gradle -p android --no-daemon assembleDebug lintDebug
+      - name: Verify installable APK and experimental capability boundaries
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist/android
+          cp android/app/build/outputs/apk/debug/app-debug.apk dist/android/DJICellularAndroid-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging dist/android/DJICellularAndroid-debug.apk > dist/android/apk-badging.txt
+          grep -q "sdkVersion:'21'" dist/android/apk-badging.txt
+          grep -q "targetSdkVersion:'35'" dist/android/apk-badging.txt
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 21 --verbose --print-certs dist/android/DJICellularAndroid-debug.apk > dist/android/apk-signature.txt
+          python3 android/verify-apk.py dist/android/DJICellularAndroid-debug.apk --commit "$COMMIT_SHA" --manifest dist/android/build-manifest.json
+          (cd dist/android && sha256sum DJICellularAndroid-debug.apk > SHA256SUMS.txt)
+          {
+            echo '### Android compatibility candidate'
+            echo 'minSdk 21 (Android 5), targetSdk 35; debug-signed APK, not a production release.'
+            echo 'USB AT, PDU SMS, experimental call control and native Ethernet probe; hardware compatibility unverified.'
+            echo 'No two-way call audio, userspace modem data driver, firmware/USB mode changes or verified system cellular integration.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: DJICellularAndroid-debug-apk
+          path: dist/android/*
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: DJICellularAndroid-lint
+          path: android/app/build/reports/lint-results-debug.*
+          if-no-files-found: ignore
+          retention-days: 14
