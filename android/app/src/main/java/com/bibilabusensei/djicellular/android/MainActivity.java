@@ -38,6 +38,9 @@ public final class MainActivity extends Activity {
     private LinearLayout content;
     private TextView sessionStatus;
     private TextView events;
+    private TextView connectionMessages;
+    private TextView inventoryView;
+    private UsbInventory inventory;
     private TextView smsView;
     private TextView callsView;
     private TextView networkView;
@@ -82,7 +85,14 @@ public final class MainActivity extends Activity {
         text("直接使用模块 USB，不用平板内置 SIM，不需要短信/电话权限。没有通话音频，也不会切 USB 模式、刷固件、改 APN、强占网卡或运行 root 命令。");
         sessionStatus = text("未连接");
         events = text("无业务操作");
-        button("连接模块并查询状态", this::requestUsb);
+        heading("第一步：系统是否看到 USB（无需授权）");
+        inventoryView = text("尚未读取系统 USB 列表");
+        inventoryView.setTextIsSelectable(true);
+        button("只读刷新 USB 设备列表", () -> refreshInventory(true));
+        heading("第二步：授权与连接进度");
+        connectionMessages = text(ConnectionStatus.message());
+        connectionMessages.setTextIsSelectable(true);
+        button("连接模块并查询状态（首次会申请 USB 授权）", this::requestUsb);
         button("释放 USB / 关闭会话（不会自动挂断已有电话）", () -> { if (service != null) service.disconnect(); });
         button("通知权限（安卓 13+）", () -> {
             if (Build.VERSION.SDK_INT >= 33) requestPermissions(new String[] {android.Manifest.permission.POST_NOTIFICATIONS}, 9);
@@ -136,25 +146,42 @@ public final class MainActivity extends Activity {
         businessButton("刷新模块本地注册（不选网、不启动数据）", () -> { if (service != null) service.refreshRegistration(); });
         heading("分享诊断（不含短信和号码）");
         button("分享兼容性报告", () -> {
+            UsbInventory current = refreshInventory(false);
+            String report = current.summary + "\n" + current.details + "\n\n" + ConnectionStatus.report() + "\n\n" +
+                    (service == null ? "未绑定模块会话，未完成硬件测试。" : service.diagnosticReport());
             Intent share = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT,
-                    service == null ? "Android API " + Build.VERSION.SDK_INT + "，未绑定模块会话，未完成硬件测试。" : service.diagnosticReport());
+                    report);
             startActivity(Intent.createChooser(share, "分享诊断，不含短信/号码"));
         });
+        refreshInventory(false);
+    }
+
+    private UsbInventory refreshInventory(boolean announce) {
+        inventory = new UsbInventory(this);
+        inventoryView.setText(inventory.summary + "\n\n" + inventory.details);
+        if (announce) ConnectionStatus.publish(inventory.stage, inventory.summary);
+        return inventory;
     }
 
     private void requestUsb() {
-        UsbManager manager = (UsbManager) getSystemService(USB_SERVICE);
-        if (manager == null) { message("此系统未提供 USB Host 服务。"); return; }
-        List<UsbDevice> targets = new ArrayList<>();
-        for (UsbDevice device : manager.getDeviceList().values()) {
-            if (device.getVendorId() == UsbBulkTransport.VENDOR && device.getProductId() == UsbBulkTransport.PRODUCT) targets.add(device);
-        }
-        if (targets.size() != 1) { message("需要唯一的 2CA3:4009 模块；检查 OTG、供电和线缆，不要改模块模式。"); return; }
-        UsbDevice device = targets.get(0);
+        UsbInventory current = refreshInventory(true);
+        if (current.manager == null || current.targets.size() != 1) return;
+        UsbManager manager = current.manager;
+        UsbDevice device = current.targets.get(0);
         confirm("允许连接模块控制接口？", "只使用 MI_02，不强制抢占驱动，不碰网卡接口。将发送 AT 和已验证的状态查询；无应答就停止。供电安全需你事先确认。", () -> {
-            Intent permission = new Intent(this, UsbPermissionReceiver.class).setAction("com.bibilabusensei.djicellular.USB_PERMISSION");
-            int mutable = Build.VERSION.SDK_INT >= 31 ? PendingIntent.FLAG_MUTABLE : 0;
-            manager.requestPermission(device, PendingIntent.getBroadcast(this, 1, permission, PendingIntent.FLAG_UPDATE_CURRENT | mutable));
+            try {
+                if (manager.hasPermission(device)) {
+                    ConnectionStatus.publish("usb_permission_cached", "已有目标 USB 授权，不会再次弹出授权框。准备连接控制口。" );
+                    UsbPermissionReceiver.startConnection(this, device);
+                } else {
+                    ConnectionStatus.publish("usb_permission_requested", "已请求安卓 USB 授权，等待系统对话框；尚未打开设备。" );
+                    Intent permission = new Intent(this, UsbPermissionReceiver.class).setAction("com.bibilabusensei.djicellular.USB_PERMISSION");
+                    int mutable = Build.VERSION.SDK_INT >= 31 ? PendingIntent.FLAG_MUTABLE : 0;
+                    manager.requestPermission(device, PendingIntent.getBroadcast(this, 1, permission, PendingIntent.FLAG_UPDATE_CURRENT | mutable));
+                }
+            } catch (RuntimeException failure) {
+                ConnectionStatus.publish("usb_permission_request_failed", "USB 授权请求失败（" + failure.getClass().getSimpleName() + "）；没有打开设备。" );
+            }
         });
     }
 
@@ -204,6 +231,7 @@ public final class MainActivity extends Activity {
 
     private void render() {
         if (sessionStatus == null) return;
+        update(connectionMessages, "阶段：" + ConnectionStatus.stage() + "\n" + ConnectionStatus.message());
         update(sessionStatus, service == null ? "未绑定服务" : service.status());
         if (service != null) {
             update(events, service.eventText());
@@ -223,12 +251,17 @@ public final class MainActivity extends Activity {
     private EditText input(String hint, int type) { EditText view = new EditText(this); view.setHint(hint); view.setInputType(type); content.addView(view); return view; }
     private Button button(String label, Runnable action) { Button view = new Button(this); view.setText(label); view.setOnClickListener(clicked -> action.run()); content.addView(view); return view; }
     private void businessButton(String label, Runnable action) { businessButtons.add(button(label, action)); }
-    private void message(String text) { events.setText(text); }
+    private void message(String text) { ConnectionStatus.publish("app_notice", text); connectionMessages.setText(text); }
 
     @Override protected void onStart() {
         super.onStart();
         bound = bindService(new Intent(this, ModemService.class), binding, Context.BIND_AUTO_CREATE);
         handler.post(refresh);
+    }
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        refreshInventory(true);
     }
     @Override protected void onStop() {
         handler.removeCallbacks(refresh);

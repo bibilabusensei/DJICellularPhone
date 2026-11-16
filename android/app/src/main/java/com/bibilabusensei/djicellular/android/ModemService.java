@@ -42,7 +42,8 @@ public final class ModemService extends Service {
     private volatile boolean busy;
     private volatile int generation;
     private volatile long homeRegistrationAt;
-    private volatile String status = "未连接；不会自动访问 USB。";
+    private volatile String connectionStage = "idle";
+    private volatile String status = "等待手动连接；请先查看上方系统 USB 列表。这不是探测失败结论。";
     private volatile String messages = "未读取短信";
     private volatile String callState = "未读取呼叫；没有双向语音驱动。";
     private volatile String event = "无业务操作";
@@ -90,6 +91,7 @@ public final class ModemService extends Service {
         UsbManager manager = (UsbManager) getSystemService(USB_SERVICE);
         if (device == null || manager == null || !manager.hasPermission(device) ||
                 device.getVendorId() != UsbBulkTransport.VENDOR || device.getProductId() != UsbBulkTransport.PRODUCT) {
+            ConnectionStatus.publish("usb_permission_lost", "连接服务没有有效的目标 USB 授权；未打开控制口。" );
             stopSelf();
             return START_NOT_STICKY;
         }
@@ -97,6 +99,7 @@ public final class ModemService extends Service {
             startForeground(1, notification("USB 会话开启；退出界面不会自动断开。"));
         } catch (RuntimeException failure) {
             event = "无法启动 USB 前台服务，请确认授权后在应用前台重试。";
+            ConnectionStatus.publish("foreground_service_failed", event);
             stopSelf();
             return START_NOT_STICKY;
         }
@@ -105,12 +108,13 @@ public final class ModemService extends Service {
             int expectedGeneration = ++generation;
             worker.execute(() -> {
                 try {
+                    progress("connect_preflight", "连接服务已启动，核对当前设备是否仍在。" );
                     UsbDevice current = manager.getDeviceList().get(device.getDeviceName());
                     if (current == null || current.getDeviceId() != device.getDeviceId()) {
                         throw new IllegalStateException("设备已改变，请重新授权。");
                     }
                     if (expectedGeneration != generation) throw new IllegalStateException("连接已取消。");
-                    AtClient opened = new AtClient(new UsbBulkTransport(manager, current));
+                    AtClient opened = new AtClient(new UsbBulkTransport(manager, current, this::progress));
                     synchronized (ModemService.this) {
                         if (expectedGeneration != generation) {
                             opened.close();
@@ -119,18 +123,23 @@ public final class ModemService extends Service {
                         client = opened;
                         deviceName = current.getDeviceName();
                     }
+                    progress("at_handshake", "USB 控制口已打开，发送一次 AT 握手；超时即停止，不猜初始化命令。" );
                     opened.query("AT");
+                    progress("usb_mode_query", "AT 已实际应答，正在只读确认原有 USB 模式。" );
                     boolean mode30 = false;
                     for (String line : opened.query("AT+GTUSBMODE?")) mode30 |= line.matches("\\+GTUSBMODE:\\s*30");
                     if (!mode30) throw new IllegalStateException("未确认模式 30；停止，不修改模式。");
+                    progress("sim_query", "已确认模式 30，正在读取 SIM 和注册状态。" );
                     String sim = opened.query("AT+CPIN?").toString().contains("READY") ? "SIM READY" : "SIM 状态未就绪";
                     recordRegistration(opened.query("AT+CEREG?"));
                     if (expectedGeneration != generation) throw new IllegalStateException("连接已取消。");
                     ready = true;
                     status = "已取得实际 AT 应答，模式 30，" + sim + "。这不证明语音或数据通路可用。";
                     event = "已连接；未改 USB 配置、DTR/RTS、APN 或固件。";
+                    progress("at_ready", status);
                 } catch (Exception failure) {
                     event = safeError(failure);
+                    ConnectionStatus.publish("failed_at_" + connectionStage, event);
                     closeClient();
                     status = "连接未通过；未尝试厂商初始化、其他接口或驱动抢占。";
                     stopForeground(true);
@@ -144,6 +153,11 @@ public final class ModemService extends Service {
     }
 
     private interface Operation { void run() throws Exception; }
+
+    private void progress(String stage, String message) {
+        connectionStage = stage;
+        ConnectionStatus.publish(stage, message);
+    }
 
     private void perform(Operation operation) {
         if (!ready || client == null) { event = "请先连接模块并通过 AT 握手。"; return; }
@@ -164,7 +178,9 @@ public final class ModemService extends Service {
     }
 
     private String safeError(Exception failure) {
-        return failure.getMessage() == null ? "操作失败，未自动重试。" : failure.getMessage();
+        if (failure.getMessage() == null) return "操作失败，未自动重试。";
+        return failure.getMessage().replaceAll("/dev/[^\\s,;\\]\\)]+", "[设备路径已省略]")
+                .replaceAll("\\b[0-9]{7,22}\\b", "[编号已省略]");
     }
 
     private synchronized void enqueue(Operation operation) {
@@ -300,7 +316,7 @@ public final class ModemService extends Service {
         return "Android " + Build.VERSION.RELEASE + " / API " + Build.VERSION.SDK_INT +
                 "\nUSB AT ready: " + ready + "\nPolling: " + polling +
                 "\nDevice: 2CA3:4009 / MI_02 only\nAudio implemented: false\nModem data driver: false" +
-                "\nHardware validation: pending\n" + status + "\n" + event +
+                "\nHardware validation: pending\n" + status + "\n" + event + "\n" + ConnectionStatus.report() +
                 "\n不含短信正文、号码、SIM 标识、设备序列号或 IP；不要把诊断报告当作全功能验收。";
     }
 
@@ -323,6 +339,7 @@ public final class ModemService extends Service {
         messages = "会话关闭，短信显示已清除。";
         seenMessages.clear();
         status = "已断开；未发送挂断、复位或改模式命令。已有呼叫不会自动结束。";
+        ConnectionStatus.publish("disconnected", status);
         stopForeground(true);
         stopSelf();
     }

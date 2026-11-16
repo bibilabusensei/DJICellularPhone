@@ -10,6 +10,7 @@ import com.bibilabusensei.djicellular.android.core.AtTransport;
 import java.io.IOException;
 
 final class UsbBulkTransport implements AtTransport {
+    interface StageListener { void report(String stage, String message); }
     static final int VENDOR = 0x2CA3;
     static final int PRODUCT = 0x4009;
     private final UsbDeviceConnection connection;
@@ -18,10 +19,11 @@ final class UsbBulkTransport implements AtTransport {
     private final UsbEndpoint output;
     private volatile boolean closed;
 
-    UsbBulkTransport(UsbManager manager, UsbDevice device) throws IOException {
+    UsbBulkTransport(UsbManager manager, UsbDevice device, StageListener listener) throws IOException {
+        listener.report("usb_validate", "核对目标身份、授权和控制接口，不修改配置。" );
         if (device.getVendorId() != VENDOR || device.getProductId() != PRODUCT ||
-                device.getInterfaceCount() != 5 || !manager.hasPermission(device)) {
-            throw new IOException("目标或 USB 权限不符；只允许 2CA3:4009 的原有五接口配置。");
+                !manager.hasPermission(device)) {
+            throw new IOException("目标或 USB 权限不符；只允许 2CA3:4009。");
         }
         UsbInterface found = null;
         for (int position = 0; position < device.getInterfaceCount(); position++) {
@@ -42,8 +44,10 @@ final class UsbBulkTransport implements AtTransport {
             if (endpoint.getAddress() == 0x03) write = endpoint;
         }
         if (read == null || write == null) throw new IOException("控制端点与已知快照不符。");
+        listener.report("usb_open", "已核对 MI_02 与端点 84/03，正在打开目标 USB 设备。" );
         UsbDeviceConnection opened = manager.openDevice(device);
         if (opened == null) throw new IOException("无法打开设备；不重装驱动。");
+        listener.report("usb_claim", "USB 已打开，尝试非强制占用控制接口，不碰网卡接口。" );
         if (!opened.claimInterface(found, false)) {
             opened.close();
             throw new IOException("控制接口被占用；不强制抢占系统驱动。");
@@ -52,6 +56,7 @@ final class UsbBulkTransport implements AtTransport {
         control = found;
         input = read;
         output = write;
+        listener.report("usb_claimed", "控制接口已打开，尚未验证 AT 应答。" );
     }
 
     @Override public void write(byte[] data) throws IOException {

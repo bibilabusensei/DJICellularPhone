@@ -1,0 +1,50 @@
+{
+  "collectedAtUTC": "2026-11-16T17:45:10.6865235Z",
+  "devices": [
+    {
+      "interface": "02",
+      "status": "OK",
+      "problemCode": 0,
+      "service": "qcusbser"
+    },
+    {
+      "interface": "03",
+      "status": "Error",
+      "problemCode": 28,
+      "service": null
+    },
+    {
+      "interface": "04",
+      "status": "OK",
+      "problemCode": 0,
+      "service": "qcusbwwan"
+    },
+    {
+      "interface": "parent",
+      "status": "OK",
+      "problemCode": 0,
+      "service": "usbccgp"
+    },
+    {
+      "interface": "00",
+      "status": "Error",
+      "problemCode": 28,
+      "service": null
+    },
+    {
+      "interface": "01",
+      "status": "Error",
+      "problemCode": 28,
+      "service": null
+    }
+  ],
+  "moduleNetwork": [
+    {
+      "status": "Up",
+      "driverDescription": "Quectel Wireless Ethernet Adapter"
+    }
+  ],
+  "ATCommandsSent": false,
+  "UsbTransferredToVM": false,
+  "configurationChanged": false
+}

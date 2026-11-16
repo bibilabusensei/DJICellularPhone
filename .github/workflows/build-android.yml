@@ -48,7 +48,7 @@ jobs:
           grep -q "sdkVersion:'21'" dist/android/apk-badging.txt
           grep -q "targetSdkVersion:'35'" dist/android/apk-badging.txt
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 21 --verbose --print-certs dist/android/DJICellularAndroid-debug.apk > dist/android/apk-signature.txt
-          python3 android/verify-apk.py dist/android/DJICellularAndroid-debug.apk --commit "$COMMIT_SHA" --manifest dist/android/build-manifest.json
+          python3 android/verify-apk.py dist/android/DJICellularAndroid-debug.apk --commit "$COMMIT_SHA" --manifest dist/android/build-manifest.json --badging dist/android/apk-badging.txt
           (cd dist/android && sha256sum DJICellularAndroid-debug.apk > SHA256SUMS.txt)
           {
             echo '### Android compatibility candidate'

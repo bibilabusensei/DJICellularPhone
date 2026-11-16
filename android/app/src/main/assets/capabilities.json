@@ -3,6 +3,8 @@
   "minimumAndroidApi": 21,
   "targetAndroidApi": 35,
   "usbAtTransportImplemented": true,
+  "readOnlyUsbInventoryImplemented": true,
+  "persistentConnectionStageHistoryImplemented": true,
   "smsPduSendReceiveImplemented": true,
   "experimentalCallControlImplemented": true,
   "backgroundPollingRequiresUserOptIn": true,
