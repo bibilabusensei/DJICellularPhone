@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "target": "USB\\VID_2CA3&PID_4009",
+  "queries": [
+    {
+      "command": "AT",
+      "result": "OK",
+      "modeValues": [],
+      "collectedAtUTC": "2026-11-16T17:52:31.5451255Z"
+    },
+    {
+      "command": "AT+GTUSBMODE?",
+      "result": "OK",
+      "modeValues": [
+        "30"
+      ],
+      "collectedAtUTC": "2026-11-16T17:52:31.6624182Z"
+    },
+    {
+      "command": "AT+GTUSBMODE=?",
+      "result": "OK",
+      "modeValues": [
+        "(30-31)"
+      ],
+      "collectedAtUTC": "2026-11-16T17:52:31.7707659Z"
+    }
+  ],
+  "targetBindingsAndNetworkMetadataUnchanged": true,
+  "completedAtUTC": "2026-11-16T17:53:11.5458188Z",
+  "modeSetResetDialSmsOrTrafficCommandsSent": false,
+  "limitations": [
+    "Actual Windows control-port queries, not Android raw USB or GSI validation.",
+    "Only AT, GTUSBMODE? and GTUSBMODE=? were sent; no mode selection or configuration changes.",
+    "Raw serial responses, device paths, interface GUIDs and addresses remain private."
+  ]
+}

@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: publish-android-experimental-v0.1.0
+  group: publish-android-experimental-v0.1.1
   cancel-in-progress: false
 jobs:
   publish:
@@ -21,10 +21,10 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      SOURCE_RUN: '43902770547'
-      SOURCE_SHA: '2b9d123ae27a7222719368bb56becc8867c201ea'
-      APK_SHA256: 'e23e5de60ed23959596eeb6247f3a55687ccf81566610154652802b8b1b668da'
-      RELEASE_TAG: android-experimental-v0.1.0
+      SOURCE_RUN: '43922470448'
+      SOURCE_SHA: 'ef94d3da22c2bc0b4e29961b5d117f60328016e8'
+      APK_SHA256: '45132d25cf829614e118cdeffc97e592b3251f95a2d911db282a0eb8c359ddfb'
+      RELEASE_TAG: android-experimental-v0.1.1
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -51,7 +51,7 @@ jobs:
           name: DJICellularAndroid-debug-apk
           path: dist/android-release
           github-token: ${{ github.token }}
-          run-id: '43902770547'
+          run-id: '43922470448'
           digest-mismatch: error
       - name: Verify unchanged APK bytes and source capability manifest
         run: |
@@ -63,6 +63,7 @@ jobs:
           manifest = json.load(open('build-manifest.json'))
           assert manifest['commit'] == os.environ['SOURCE_SHA']
           assert manifest['sha256'] == os.environ['APK_SHA256']
+          assert manifest['version'] == '0.1.1' and manifest['versionCode'] == 2
           assert manifest['hardwareTestsPerformed'] is False
           assert manifest['capabilities']['androidHardwareValidated'] is False
           assert manifest['capabilities']['twoWayCallAudioImplemented'] is False
@@ -70,7 +71,7 @@ jobs:
           assert manifest['capabilities']['systemCellularNetworkIntegrationImplemented'] is False
           PY
           cd ../..
-          python3 android/verify-apk.py dist/android-release/DJICellularAndroid-debug.apk --commit "$SOURCE_SHA" --manifest dist/android-release/release-verified.json
+          python3 android/verify-apk.py dist/android-release/DJICellularAndroid-debug.apk --commit "$SOURCE_SHA" --manifest dist/android-release/release-verified.json --badging dist/android-release/apk-badging.txt
       - name: Upload exact verified assets as draft then publish experimental release
         run: |
           set -euo pipefail
@@ -79,8 +80,8 @@ jobs:
             dist/android-release/build-manifest.json \
             dist/android-release/SHA256SUMS.txt \
             --target "$SOURCE_SHA" --draft --prerelease --latest=false \
-            --title 'Android v0.1.0 兼容实验版（非完整电话）' \
-            --notes-file docs/Android-Release-v0.1.0.md
+            --title 'Android v0.1.1 USB 识别与状态修复（实验版）' \
+            --notes-file docs/Android-Release-v0.1.1.md
           gh release view "$RELEASE_TAG" --json assets,isDraft > release-draft.json
           python3 - <<'PY'
           import json

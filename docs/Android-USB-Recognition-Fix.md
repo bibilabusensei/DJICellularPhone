@@ -24,7 +24,8 @@
 1. 找到现有 Windows Android SDK（platform 35/36、build-tools 36）及 JDK 21。直接用本机 `aapt2`、`javac --release 8`、D8、zipalign、apksigner 构建了本地 0.1.1 APK；API 21 签名校验及包内能力核验通过。这是实际本地编译，不只是 CI 或静态检查。
 2. 对生产 `UsbInventory`、`UsbBulkTransport` 和 `ConnectionStatus` 运行隔离的 Java / Android API 假对象回归：无服务、空列表、未声明 Host、权限元数据失败、未知 VID/PID、多个目标、7 个接口条目但已知控制口正确、错误端点拒绝、仅非强制 claim MI_02、不发送 Bulk 以及阶段历史保留/有界。全部通过。**假对象不是安卓系统或 USB 真机，不代表模块已能读取。**
 3. 已定位的 SDK 路径没有 emulator/system-images，AVD 列表为空，ADB 没有已连接的安卓目标。Ubuntu 22.04 环境可以启动，但没有现成的 Java/ADB/Android SDK；没有擅自安装驱动、修改 ROM 或把模块透传给 VMware/WSL。
-4. 只读核对了电脑当前模块：`MI_02 qcusbser`、`MI_04 qcusbwwan` 和父设备均 Code 0，模块网卡 `Up`；其他三接口仍 Code 28。见 [脱敏检查](Windows-USB-Preservation-Android-v0.1.1.json)。没有发送 PC AT 指令、联网流量、固件/模式命令或重新安装驱动。这不是新通话/联网测试，也不等于连续状态监测。
+4. 只读核对了电脑当前模块：`MI_02 qcusbser`、`MI_04 qcusbwwan` 和父设备均 Code 0，模块网卡 `Up`；其他三接口仍 Code 28。见 [脱敏检查](Windows-USB-Preservation-Android-v0.1.1.json)。这次元数据快照本身没有发送 AT、联网流量或配置命令；不是新通话/联网测试，也不等于连续状态监测。
+5. 随后按用户授权在已核验的 Windows 控制口实际执行且仅执行 `AT`、`GTUSBMODE?`、`GTUSBMODE=?`：三条均 `OK`，当前模式 30、支持范围 30–31；前后目标绑定和网卡元数据相同。见 [模式只读复核](Windows-USB-Mode-Android-v0.1.1.json)。没有选择 31、复位、选网、短信、电话、流量或驱动更改。Windows AT 成功不能当作安卓平板的原始 USB 测试通过。
 
 本地编译的 APK 使用本地临时测试签名；公开下载包以对应 GitHub 构建与 Release 为准，不能把本地 APK 的哈希/签名与 CI APK 混用。真实安卓 5/11 运行、用户平板 OTG、USB 授权与模块原始 Bulk AT 通信仍待实际验证。
 
