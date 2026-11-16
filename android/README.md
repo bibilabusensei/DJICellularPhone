@@ -32,6 +32,8 @@
 
 ## 安装和首轮验收
 
+最新候选已经通过编译、lint、最低 API 和签名核验：[下载 APK artifact](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/43902770547/artifacts/14242530773)。解压后取 `DJICellularAndroid-debug.apk`，不是 IPA，无需再签名。确切代码、哈希、保留期限与尚未验收的能力见 [构建记录](../docs/Android-Build-Status.md)。
+
 候选包由 `.github/workflows/build-android.yml` 生成，使用 CI 临时 debug 签名，可作为 APK 安装测试，不需要像 IPA 那样另行签名。不是商店/生产签名；下一次构建可能需要卸载旧版本后安装。当前不自动创建全功能 Release。
 
 1. 先安装，不接模块，确认应用能启动；记录系统 API 和型号，不需要 SIM 卡编号或 IMEI。
