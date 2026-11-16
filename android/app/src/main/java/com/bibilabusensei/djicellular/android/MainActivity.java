@@ -133,6 +133,7 @@ public final class MainActivity extends Activity {
         text("普通 USB 权限不能自动创建 Android 蜂窝网卡。若 GSI 内核没有此模块的网络驱动，App 不会用 Wi-Fi 冒充模块联网，也不会替换内核或抢占 MI_04。当前没有用户态 QMI 数据驱动/VPN 实现。");
         button("查看系统以太网并确认小流量 HTTPS 测试", this::networkTest);
         networkView = text("未测试网络");
+        businessButton("刷新模块本地注册（不选网、不启动数据）", () -> { if (service != null) service.refreshRegistration(); });
         heading("分享诊断（不含短信和号码）");
         button("分享兼容性报告", () -> {
             Intent share = new Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT,
@@ -166,6 +167,10 @@ public final class MainActivity extends Activity {
 
     private void networkTest() {
         if (networkBusy) { message("网络测试正在进行，不重复提交。"); return; }
+        if (service == null || !service.isHomeRegisteredRecently()) {
+            networkView.setText("需先通过模块 AT 连接并刷新本地 EPS 注册；拒绝漫游或超过 5 分钟的旧状态。");
+            return;
+        }
         NativeNetworkProbe probe = new NativeNetworkProbe(this);
         List<Network> networks = probe.candidates();
         if (networks.isEmpty()) {
@@ -176,6 +181,10 @@ public final class MainActivity extends Activity {
         for (int position = 0; position < labels.length; position++) labels[position] = "以太网候选 " + (position + 1) + "（未确认厂商）";
         new AlertDialog.Builder(this).setTitle("选择当前直插模块对应的有线候选")
                 .setItems(labels, (dialog, which) -> confirm("允许少量流量？", "只在所选系统以太网上请求 example.com 的 HTTPS HEAD，不改变默认网络。DNS/系统代理与上游路径仍需独立核实。", () -> {
+                    if (service == null || !service.isHomeRegisteredRecently()) {
+                        networkView.setText("模块本地注册状态过期或已断开，未发送流量。");
+                        return;
+                    }
                     networkBusy = true;
                     networkView.setText("正在测试所选有线网络；不会用平板 Wi-Fi 补救…");
                     networkWorker.execute(() -> {

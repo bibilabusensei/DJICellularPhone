@@ -15,6 +15,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.telephony.SmsMessage;
 import com.bibilabusensei.djicellular.android.core.AtClient;
 import com.bibilabusensei.djicellular.android.core.SmsSubmit;
@@ -40,6 +41,7 @@ public final class ModemService extends Service {
     private volatile boolean ready;
     private volatile boolean busy;
     private volatile int generation;
+    private volatile long homeRegistrationAt;
     private volatile String status = "未连接；不会自动访问 USB。";
     private volatile String messages = "未读取短信";
     private volatile String callState = "未读取呼叫；没有双向语音驱动。";
@@ -71,6 +73,7 @@ public final class ModemService extends Service {
         worker.scheduleWithFixedDelay(() -> {
             if (!polling || !ready || busy) return;
             if (wakeLock != null) wakeLock.acquire(600000L);
+            if (!polling || !ready) { releaseWakeLock(); return; }
             perform(() -> {
                 updateCalls();
                 updateMessages();
@@ -108,7 +111,7 @@ public final class ModemService extends Service {
                     for (String line : opened.query("AT+GTUSBMODE?")) mode30 |= line.matches("\\+GTUSBMODE:\\s*30");
                     if (!mode30) throw new IllegalStateException("未确认模式 30；停止，不修改模式。");
                     String sim = opened.query("AT+CPIN?").toString().contains("READY") ? "SIM READY" : "SIM 状态未就绪";
-                    opened.query("AT+CEREG?");
+                    recordRegistration(opened.query("AT+CEREG?"));
                     if (expectedGeneration != generation) throw new IllegalStateException("连接已取消。");
                     ready = true;
                     status = "已取得实际 AT 应答，模式 30，" + sim + "。这不证明语音或数据通路可用。";
@@ -163,6 +166,21 @@ public final class ModemService extends Service {
 
     public void readSms() { enqueue(this::updateMessages); }
     public void refreshCalls() { enqueue(this::updateCalls); }
+    public void refreshRegistration() { enqueue(() -> {
+        recordRegistration(client.query("AT+CEREG?"));
+        event = isHomeRegisteredRecently() ? "本地 EPS 注册已确认，5 分钟内可单独测试系统以太网。" : "未确认本地注册，不进行流量测试。";
+    }); }
+
+    private void recordRegistration(List<String> lines) {
+        homeRegistrationAt = 0;
+        for (String line : lines) {
+            if (line.matches("\\+CEREG:\\s*\\d+,\\s*1(?:,.*)?")) homeRegistrationAt = SystemClock.elapsedRealtime();
+        }
+    }
+
+    public boolean isHomeRegisteredRecently() {
+        return ready && homeRegistrationAt > 0 && SystemClock.elapsedRealtime() - homeRegistrationAt < 300000L;
+    }
 
     public void sendSms(String recipient, String text) {
         SmsSubmit submit = new SmsSubmit(recipient, text);
@@ -246,7 +264,7 @@ public final class ModemService extends Service {
         Notification.Builder builder = Build.VERSION.SDK_INT >= 26 ? new Notification.Builder(this, CHANNEL) : new Notification.Builder(this);
         int immutable = Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0;
         PendingIntent open = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | immutable);
-        return builder.setSmallIcon(android.R.drawable.stat_sys_data_usb).setContentTitle("DJI 模块研究")
+        return builder.setSmallIcon(R.drawable.ic_usb).setContentTitle("DJI 模块研究")
                 .setContentText(text).setContentIntent(open).setOngoing(true).build();
     }
 
@@ -274,6 +292,7 @@ public final class ModemService extends Service {
 
     private void closeClient() {
         ready = false;
+        homeRegistrationAt = 0;
         polling = false;
         releaseWakeLock();
         AtClient opened = client;
