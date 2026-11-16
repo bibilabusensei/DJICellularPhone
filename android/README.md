@@ -50,6 +50,8 @@ gradle -p android --no-daemon assembleDebug lintDebug
 
 CI 另外核验最低 API 21、目标 API 35、可兼容 API 21 的 APK 签名、包内能力清单、SHA-256，并上传 APK/清单/签名结果。没有安卓模拟器或真机时，不把编译/lint 称为运行、收发短信、通话或联网实测。
 
+AGP 8.7.3 的 `ForegroundServicePermission` 静态规则只列举清单权限，不能识别此应用采用的动态 USB 授权前提。按 Android 官方 connectedDevice 文档，已获 USB 设备访问权是另一合法前提；代码在 `startForeground` 之前验证具体设备权限，并捕获权限撤回/启动失败。因此只在这个 service 元素局部标记该规则，不关闭整体 lint，也不为消除提示而增加不需要的改网卡/蓝牙权限。
+
 ## 资料依据
 
 - [Android USB Host](https://developer.android.com/develop/connectivity/usb/host)：普通 App 可在用户授权后访问具体 USB 接口/端点；并不自动提供系统网卡。

@@ -93,7 +93,13 @@ public final class ModemService extends Service {
             stopSelf();
             return START_NOT_STICKY;
         }
-        startForeground(1, notification("USB 会话开启；退出界面不会自动断开。"));
+        try {
+            startForeground(1, notification("USB 会话开启；退出界面不会自动断开。"));
+        } catch (RuntimeException failure) {
+            event = "无法启动 USB 前台服务，请确认授权后在应用前台重试。";
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         if (client == null && !busy) {
             busy = true;
             int expectedGeneration = ++generation;
