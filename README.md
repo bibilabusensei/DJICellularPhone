@@ -6,6 +6,8 @@
 
 新增独立 [Android 工程](android/README.md)：最低安卓 5（API 21），面向安卓 10/11 及纯 Wi-Fi GSI 平板，使用用户授权的 USB 控制接口，不依赖内置 SIM 或 root。已实现 PDU 短信提交/读取、来电状态与明确授权的呼叫控制实验、系统以太网专用请求；**没有双向通话声音、QMI 数据驱动或已验证的系统蜂窝上网**。兼容性、短信/呼叫和流量均须真机分别验收，不能当作已完成电话产品。GitHub Actions 生成可安装的 debug APK 候选，不修改模块模式/固件或现有 Windows 网卡。
 
+下载入口已改为公开 [Android 实验版 Releases](https://github.com/bibilabusensei/DJICellularPhone/releases/tag/android-experimental-v0.1.0)：[直接下载 APK，无需登录、解压或另签名](https://github.com/bibilabusensei/DJICellularPhone/releases/download/android-experimental-v0.1.0/DJICellularAndroid-debug.apk)。仍是上文所述的兼容实验版，不是全功能电话。
+
 **v0.2.0 是只读研究界面，不是真实电话或上网工具。** 没有实现实时 USB 通信、SIM 查询、蜂窝数据、IMS/VoLTE、音频或 CallKit 通话。号码仅保留在当前界面内，不发送、不拨打，也不会调用本机 SIM 电话。
 
 **Windows 第一阶段已通过：2026-10-09 12:51（香港），本机通过模块完成了限定接口的 DNS 和 HTTPS 测试。** 用户报告切换 SIM 并重新插接后，模块注册中国电信本地 LTE、数据已附着；目标网卡有地址，直接 HTTPS 返回 200。测试固定源地址及出接口，不使用应用代理或其他网卡回退。详见 [Windows 上网验证](docs/Windows-PC-Internet.md) 和 [流量证据](docs/Windows-Internet-AfterSIMSwitch.json)。原始签名驱动的手动选择仍不是 `4009` 原厂 INF 匹配或长期稳定性证明；没有改变电脑默认路由，也未验证所有应用都使用模块。iPhone/iPad 驱动与普通电话仍未实现。

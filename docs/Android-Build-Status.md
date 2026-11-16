@@ -42,3 +42,16 @@
 - 取消连接与短信内存清理加了会话一致性保护；查询长度/超时有限，不强制 claim 系统驱动，不自动初始化厂商接口或改模式。
 
 本次只上传 APK 候选，不创建“已完成全功能电话”的 Release。先安装并确认 GSI 上能启动，再在 OTG/供电条件确认后执行明确授权的 AT 查询并分享无短信/号码的诊断报告。不要先启用无声音的呼叫实验。详情见 [Android 使用与限制](../android/README.md)。
+
+## 2026-11-17：应用户要求转存到公开 Releases
+
+用户遇到 Actions 附件的登录限制，随后明确要求发布到 Releases。现已公开 [android-experimental-v0.1.0](https://github.com/bibilabusensei/DJICellularPhone/releases/tag/android-experimental-v0.1.0)，标记为 prerelease，不作为稳定版或已完成全功能电话。
+
+- [直接下载 APK](https://github.com/bibilabusensei/DJICellularPhone/releases/download/android-experimental-v0.1.0/DJICellularAndroid-debug.apk)：本体 **42,003 字节**，无需登录、解压或另签名。
+- 不是重新构建：源仍为 `2b9d123ae27a7222719368bb56becc8867c201ea` / run `43902770547`，APK SHA-256 仍为 `e23e5de60ed23959596eeb6247f3a55687ccf81566610154652802b8b1b668da`，原有 debug 签名不变。
+- 发布流程提交 `2e2064ec492f6db398a5c996d6480bb7b1e89d3d`；[发布 run 43909342757](https://github.com/bibilabusensei/DJICellularPhone/actions/runs/43909342757) 成功，固定来源/哈希/能力核验通过，三个附件上传完成后才从 draft 发布。
+- Release ID `447305156`，`draft=false`、`prerelease=true`；包含 APK、`build-manifest.json`（1,007 字节）、`SHA256SUMS.txt`（95 字节），未覆盖其他 Release。
+- 已实际以不带登录凭据的普通 HTTPS 请求下载三个公开附件；APK 哈希、来源提交和清单能力边界与原始候选一致，校验文件也相符。只读检查下载文件，没有运行/安装 APK 或访问模块。
+- 原 Actions ZIP 40,284 字节不是 APK 本体大小。公开 Release 不依赖该 Actions 附件的登录入口或其 30 天保留期。
+
+发布只改变下载方式，不新增通话声音、模块数据驱动或真机验收；没有修改固件、模式、签名密钥或电脑网卡。发布说明另见 [Android Release 说明](Android-Release-v0.1.0.md)。
